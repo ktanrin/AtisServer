@@ -1,39 +1,50 @@
 <template>
-    <div>
-      <h3>ATIS Information</h3>
-      <div v-if="airportCode">
-        <strong>Airport Code:</strong> {{ airportCode }}
+  <div>
+      <div>ATIS DISPLAY</div>
+      <button>X</button>
+      <div>
+          <span>VTBD - ARR ATIS</span>
+          <input type="text" v-model="atisCode" />
       </div>
-      <div v-if="atisInfo">
-        <strong>ATIS Info:</strong> {{ atisInfo }}
+      <div>
+          <span>TIME</span>
+          <input type="text" v-model="time" />
+          <span>(MET at</span>
+          <input type="text" v-model="metTime" />
+          <span>)</span>
       </div>
-      <div v-if="time">
-        <strong>Time:</strong> {{ time }}
+      <div>APCH</div>
+      <div>
+          <span>RWY</span>
+          <input type="text" v-model="rwy" />
+          <input type="text" v-model="rwyLeft" />
+          <input type="text" v-model="rwyRight" />
       </div>
-      <div v-if="runway">
-        <strong>Runway:</strong> RWY-IN-USE {{ runway }}
+      <!-- ... other input boxes ... -->
+      <div>
+          <span>Remark</span>
+          <input type="text" v-model="remark" />
       </div>
-      <div v-if="transitionLevel">
-        <strong>Transition Level:</strong> FL{{ transitionLevel }}
-      </div>
-      <div v-if="weatherTime">
-        <strong>Weather Time:</strong> {{ weatherTime }}
-      </div>
-      <div v-if="wind">
-        <strong>Wind:</strong> {{ wind }}
-      </div>
-      <div v-if="visibility">
-        <strong>Visibility:</strong> {{ visibility }}
-      </div>
-      <div v-if="cloudAndWeather">
-        <strong>Clouds & Weather:</strong> {{ cloudAndWeather }}
-      </div>
-      <div v-if="trend">
-        <strong>Trend:</strong> {{ trend }}
-      </div>
-      <!-- Add any other fields as necessary -->
-    </div>
-  </template>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+      return {
+          atisCode: 'Z',
+          time: '0523z',
+          metTime: '0430z',
+          rwy: '21',
+          rwyLeft: '21L',
+          rwyRight: '21R',
+          // ... other data properties ...
+          remark: '(VTBD DEP ATIS 118.55 / ARR ATIS 126.4)'
+      }
+  }
+}
+</script>
+
   
   <script>
   export default {
