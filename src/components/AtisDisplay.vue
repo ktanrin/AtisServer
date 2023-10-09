@@ -1,77 +1,68 @@
 <template>
-  <div>
-      <div>ATIS DISPLAY</div>
-      <button>X</button>
-      <div>
-          <span>VTBD - ARR ATIS</span>
-          <input type="text" v-model="atisCode" />
-      </div>
-      <div>
-          <span>TIME</span>
-          <input type="text" v-model="time" />
-          <span>(MET at</span>
-          <input type="text" v-model="metTime" />
-          <span>)</span>
-      </div>
-      <div>APCH</div>
-      <div>
-          <span>RWY</span>
-          <input type="text" v-model="rwy" />
-          <input type="text" v-model="rwyLeft" />
-          <input type="text" v-model="rwyRight" />
-      </div>
-      <!-- ... other input boxes ... -->
-      <div>
-          <span>Remark</span>
-          <input type="text" v-model="remark" />
-      </div>
-  </div>
+  
+  <section class="section">
+    <div class="container">
+        <div class="tile is-ancestor">
+            <div class="tile is-vertical is-8">
+                <div class="tile">
+                    <div class="tile is-parent">
+                        <article class="tile is-child notification">
+                            <!-- Your ATIS DISPLAY content here -->
+                            <div>
+                              <div v-if="atisInfo">
+                                <h3>ATIS Information : {{ atisInfo }}</h3>
+                              </div>
+                              <div v-if="atisRWY">
+                                <h3>ATIS RWY : {{ atisRWY }}</h3>
+                              </div>
+                              <div v-if="atisWS">
+                              <h3>ATIS WS : {{ atisWS }}</h3>
+                              </div>
+                              <div v-if="rcrContent">
+                                <h3>RCR Content : {{ rcrContent }}</h3>
+                              </div>
+                              
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification">
+                        <!-- Your MET REPORT and other details here -->
+                        <div v-if="metReportText">
+                          <h3>MET Report : {{ metReportText }}</h3>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification">
+                    <!-- Your large number display here -->
+                    <p class="title">1021</p>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
 </template>
 
 <script>
 export default {
-  data() {
-      return {
-          atisCode: 'Z',
-          time: '0523z',
-          metTime: '0430z',
-          rwy: '21',
-          rwyLeft: '21L',
-          rwyRight: '21R',
-          // ... other data properties ...
-          remark: '(VTBD DEP ATIS 118.55 / ARR ATIS 126.4)'
-      }
+  props: {
+      error: String,
+      atisInfo: String,
+      atisRWY: String,
+      atisWS: String,
+      rcrContent: String,
+      metReportText: String      
   }
 }
 </script>
 
   
-  <script>
-  export default {
-    props: [
-      'airportCode',
-      'atisInfo',
-      'time',
-      'runway',
-      'transitionLevel',
-      'weatherTime',
-      'wind',
-      'visibility',
-      'cloudAndWeather',
-      'trend'
-      // ... other fields as necessary
-    ]
-  };
-  </script>
   
-  <style scoped>
+  <style>
   /* You can add styling here to make the display visually appealing */
-  h3 {
-    text-decoration: underline;
-  }
-  
-  div {
-    margin-bottom: 10px;
-  }
+ 
   </style>
   

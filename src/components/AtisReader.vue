@@ -1,34 +1,31 @@
 <template>
-  <div>
-    <textarea v-if="fileContent" v-model="fileContent" rows="10" cols="50"></textarea>
-    <div v-if="error">{{ error }}</div>
-    <div v-if="parsedAtisInfo">
-      <h3>ATIS Information : {{ parsedAtisInfo.atisInfo }}</h3>
-    </div>
-    <div v-if="parsedAtisRWY">
-      <h3>ATIS RWY : {{ parsedAtisRWY.atisRWY }}</h3>
-    </div>
-    <div v-if="parsedRCR">
-      <h3>RCR Content : {{ parsedRCR.rcrContent }}</h3>
-    </div>
-    <div v-if="parsedMetReport">
-      <h3>MET Report : {{ parsedMetReport.metReportText }}</h3>
-    </div>
-  </div>
+   <AtisDisplay 
+      :error="error"
+      :atisInfo="parsedAtisInfo?.atisInfo"
+      :atisRWY="parsedAtisRWY?.atisRWY"
+      :atisWS="parsedWindShear?.atisWS"
+      :rcrContent="parsedRCR?.rcrContent"
+      :metReportText="parsedMetReport?.metReportText"
+    />
 </template>
 
 <script>
+import AtisDisplay from './AtisDisplay.vue'; // adjust the path if necessary
 export default {
+  components: {
+    AtisDisplay
+  },
   data() {
     return {
+      AtisDisplay,
       fileContent: null,
       error: null,
       selectedFilePath: '',
       parsedAtisInfo: null,
       parsedAtisRWY: null,
       parsedRCR: null,
-      rcrContent: null,
-      parsedMetReport: null
+      parsedMetReport: null,
+      parsedWindShear: null
     };
   },
   mounted() {
@@ -64,6 +61,7 @@ export default {
           // Parse ATIS info and store it
           this.parsedAtisInfo = this.parseAtisInfo(response.data);
           this.parsedAtisRWY = this.parseAtisRWY(response.data);
+          this.parsedWindShear = this.parseWindShear(response.data);
           this.parsedRCR = this.parseRCR(response.data);
           this.parsedMetReport = this.parseMetReport(response.data);
         } else {
@@ -155,9 +153,16 @@ parseMetReport(data) {
   }
 
   return { error: 'MET report not found' };
-}
+},
 
-
+parseWindShear(data) {
+    const targetWords = ['WS', 'MBST', 'REP', 'OBS', 'FCST'];
+    const lines = data.split('\n'); 
+    const wsLines = lines.filter(line => {
+      return targetWords.some(word => line.includes(word));
+    });
+    return { atisWS: wsLines.join('\n') };
+  }
     
   }
 };
