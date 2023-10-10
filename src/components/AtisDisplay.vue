@@ -1,49 +1,36 @@
 <template>
-  
-  <section class="section">
     <div class="container">
-        <div class="tile is-ancestor">
-            <div class="tile is-vertical is-8">
-                <div class="tile">
-                    <div class="tile is-parent">
-                        <article class="tile is-child notification">
+        <div class="tile">
+            <div class="tile is-8">
+                        <article class="tile is-parent">
                             <!-- Your ATIS DISPLAY content here -->
                             <div>
                               <div v-if="atisInfo">
-                                <h3>ATIS Information : {{ atisInfo }}</h3>
+                                <h3>APP-TYPE : EXP ILS Z APCH RWY 21</h3>
                               </div>
                               <div v-if="atisRWY">
                                 <h3>ATIS RWY : {{ atisRWY }}</h3>
+                                <button class = "button is-success">21R</button> 
+                                <button class = "button is-success">21L</button>
                               </div>
                               <div v-if="atisWS">
                               <h3>ATIS WS : {{ atisWS }}</h3>
                               </div>
                               <div v-if="rcrContent">
                                 <h3>RCR Content : {{ rcrContent }}</h3>
-                              </div>
-                              
+                              </div>      
                             </div>
                         </article>
-                    </div>
-                </div>
-                <div class="tile is-parent">
-                    <article class="tile is-child notification">
-                        <!-- Your MET REPORT and other details here -->
-                        <div v-if="metReportText">
-                          <h3>MET Report : {{ metReportText }}</h3>
-                        </div>
-                    </article>
-                </div>
             </div>
-            <div class="tile is-parent">
-                <article class="tile is-child notification">
+            <div class="tile is-vertical">
+                <article class="tile box">
                     <!-- Your large number display here -->
-                    <p class="title">1021</p>
+                    <h6 class="is-width">{{ atisInfo }}</h6>
                 </article>
-            </div>
+              </div>           
         </div>
     </div>
-</section>
+
 </template>
 
 <script>
