@@ -107,6 +107,17 @@ async function createWindow() {
         {
           label: 'Select File Manually',
           click: () => setFolderPath(true)
+        },
+        {
+          label: 'Clear Cache',
+          click: async () => {
+            const focusedWindow = BrowserWindow.getFocusedWindow();
+            if (focusedWindow) {
+              const ses = focusedWindow.webContents.session;
+              await ses.clearCache();
+              console.log('Cache cleared!');
+            }
+          }
         }
       ]
     }

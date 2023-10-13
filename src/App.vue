@@ -7,6 +7,8 @@
       :atisRWY="atisRWY"
       :rcrContent="rcrContent"
       :metReportText="metReportText"
+      :qnh="qnh"
+      :mmHg="mmHg"
     />
   </div>
 </template>
@@ -28,7 +30,9 @@ export default {
       atisInfo: null,
       atisRWY: null,
       rcrContent: null,
-      metReportText: null
+      metReportText: null,
+      qnh: null,
+      mmHg: null
     };
   },
   methods: {
@@ -38,6 +42,14 @@ export default {
       this.atisRWY = data.atisRWY?.atisRWY || null;
       this.rcrContent = data.rcrContent?.rcrContent || null;
       this.metReportText = data.metReportText?.metReportText || null;
+      this.qnh = data.qnh?.qnh || null;
+      this.mmHg = data.mmHg?.mmHg || null;
+      console.log(data.qnh);
+      console.log(data.mmHg);
+      console.log(data.metReportText);
+      console.log(data.atisInfo);
+      console.log(data.atisRWY);
+      console.log(data.rcrContent);
     }
   }
 };

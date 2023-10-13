@@ -1,23 +1,13 @@
 <template>
-   <AtisDisplay 
-      :error="error"
-      :atisInfo="parsedAtisInfo?.atisInfo"
-      :atisRWY="parsedAtisRWY?.atisRWY"
-      :atisWS="parsedWindShear?.atisWS"
-      :rcrContent="parsedRCR?.rcrContent"
-      :metReportText="parsedMetReport?.metReportText"
-    />
+   <div></div>
 </template>
 
 <script>
-import AtisDisplay from './AtisDisplay.vue'; // adjust the path if necessary
+
 export default {
-  components: {
-    AtisDisplay
-  },
+ 
   data() {
     return {
-      AtisDisplay,
       fileContent: null,
       error: null,
       selectedFilePath: '',
@@ -25,6 +15,8 @@ export default {
       parsedAtisRWY: null,
       parsedRCR: null,
       parsedMetReport: null,
+      parsedQNHqnh: null,
+      parsedmmHg: null,
       parsedWindShear: null
     };
   },
@@ -64,6 +56,20 @@ export default {
           this.parsedWindShear = this.parseWindShear(response.data);
           this.parsedRCR = this.parseRCR(response.data);
           this.parsedMetReport = this.parseMetReport(response.data);
+          this.parsedQNH = this.parseQNH(response.data);
+          this.parsedmmHg = this.parsemmHg(response.data);
+
+          // Emit the parsed data to the parent component
+          this.$emit('atis-data-parsed', {
+          atisInfo: this.parsedAtisInfo,
+          atisRWY: this.parsedAtisRWY,
+          atisWS: this.parsedWindShear,
+          rcrContent: this.parsedRCR,
+          metReportText: this.parsedMetReport,
+          qnh: this.parsedQNH,
+          mmHg: this.parsedmmHg
+          });
+
         } else {
           this.error = response.error;
         }
@@ -143,6 +149,7 @@ parseMetReport(data) {
   // Find the index of "WIND" and "ADZ" in the words array
   const windIndex = words.findIndex((word) => word === 'WIND');
   const adzIndex = words.findIndex((word) => word === 'ADZ');
+  
 
   if (windIndex !== -1 && adzIndex !== -1 && windIndex < adzIndex) {
     // Extract the MET report between "WIND" and "ADZ"
@@ -162,7 +169,30 @@ parseWindShear(data) {
       return targetWords.some(word => line.includes(word));
     });
     return { atisWS: wsLines.join('\n') };
-  }
+  },
+
+parseQNH(data) {
+ 
+  // Extract QNH from the data
+  const qnhRegex = /QNH (\d+)HPA/;
+    const qnhMatch = data.match(qnhRegex);
+    if (qnhMatch && qnhMatch[1]) {
+        console.log(qnhMatch[1]);
+        return { qnh: qnhMatch[1] }; // calculate and store the mmHg value
+    }
+    return { error: 'N/A' };
+},
+
+parsemmHg(data) {
+ 
+  // Extract QNH from the data
+  const qnhRegex = /QNH (\d+)HPA/;
+    const qnhMatch = data.match(qnhRegex);
+    if (qnhMatch && qnhMatch[1]) {
+        return { mmHg: String(Math.floor(qnhMatch[1] * 0.0295301 * 100)) }; // calculate and store the mmHg value
+    }
+    return { error: 'N/A' };
+}
     
   }
 };
