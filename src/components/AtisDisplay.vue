@@ -6,23 +6,34 @@
             <div class="tile is-8 is-parent is-vertical">
               <!-- Header -->
                         <article class="tile box custom-header">
-                            <div>
+                            <div class="tile is-6 is-child">
                               <div>
-                                <h3>APP-TYPE : EXP ILS Z APCH RWY 21</h3>
+                                <h3>APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small" value="EXP ILS Z APCH RWY 21"/>
                               </div>
+                              <div>
+                                <h3>Met Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000"/>
+                              </div>
+                              <div>
+                                <h3>Vis :</h3><input type="text" placeholder="Visibility" class="input is-small" value="10KM"/>
+                              </div>
+                            </div>
+                            <div class="tile is-child">
                               <div>
                                 <h3>ATIS RWY : {{ atisRWY }}</h3>
-                                <button class = "button is-success">21R</button> 
-                                <button class = "button is-success">21L</button>
+                                  <div>
+                                    <button class = "button is-success is-small custom-button">21R</button>
+                                    <button class = "button is-success is-small custom-button">21L</button>
+                                  </div>
                               </div>
                               <div>
-                                <h3>ATIS WS : {{ atisWS }}</h3>
-                              </div>
+                                <h3>Wind :</h3><input type="text" placeholder="Wind" class="input is-small" value="190/13KT"/>
+                              </div>                             
                               <div>
-                                <h3>RCR Content : {{ rcrContent }}</h3>
+                                <h3>Wx :</h3><input type="text" placeholder="Weather" class="input is-small" value="VMC"/>
                               </div>
-                                                            
                             </div>
+                                                            
+                            
                         </article>
             </div>
         
@@ -114,6 +125,10 @@ export default {
   .custom-header {
     text-align: left;
   }
+
+  .custom-button {
+    margin-right: 10px;
+}
   /* Target the h6 with class 'atis-info' inside the box with class 'atis-info-box' */
   .atis-info-box .atis-info {
     width: 100%;
