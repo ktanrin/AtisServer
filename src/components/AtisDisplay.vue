@@ -10,14 +10,26 @@
                               <div>
                                 <h3>APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info" value="EXP ILS Z APCH RWY 21"/>
                               </div>
+                             <div class="tile is-parent" style="
+                                  padding-top: 0px;
+                                  padding-right: 0px;
+                                  padding-bottom: 0px;
+                                  padding-left: 0px;
+                              "> 
+                                <div >
+                                  <h3>Met Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
+                                  <h3>Vis :</h3><input type="text" placeholder="Visibility" class="input is-small" value="10KM"/>
+                                </div>
+                                <div>
+                                  <h3>ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
+                                  <h3>Temp :</h3><input type="text" placeholder="Temperature" class="input is-small" value="30C"/>
+                                </div>
+                            </div> 
                               <div>
-                                <h3>Met Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000"/>
-                              </div>
-                              <div>
-                                <h3>Vis :</h3><input type="text" placeholder="Visibility" class="input is-small" value="10KM"/>
+                               
                               </div>
                             </div>
-                            <div class="tile is-child">
+                            <div class="tile is-6 is-child">
                               <div>
                                 <h3>RWY-IN-USE :</h3>
                                   <div>
@@ -26,17 +38,34 @@
                                             {{ runway }}
                                         </option>
                                     </select>
-                                    <button class = "button is-success is-small custom-button">21R</button>
-                                    <button class = "button is-success is-small custom-button">21L</button>
+                                    <button :class="getLeftButtonClass()">{{ getLeftButtonLabel() }}</button>
+                                    <button :class="getRightButtonClass()">{{ getRightButtonLabel() }}</button>
                                   </div>
                               </div>
-                              <div>
-                                <h3>Wind :</h3><input type="text" placeholder="Wind" class="input is-small" value="190/13KT"/>
-                              </div>                             
-                              <div>
-                                <h3>Wx :</h3><input type="text" placeholder="Weather" class="input is-small" value="VMC"/>
+                              <div class="tile is-parent" style="
+                                  padding-top: 0px;
+                                  padding-right: 0px;
+                                  padding-bottom: 0px;
+                                  padding-left: 0px;
+                              ">
+                                <div>
+                                  <h3>Wind :</h3><input type="text" placeholder="Wind" class="input is-small" value="190/13KT"/>
+                                  <h3>Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small" value="24%"/>
+                                </div>                             
+                                <div>
+                                  <h3>Prevailing Wx :</h3>
+                                    <div>
+                                      <select class="select is-small custom-button">
+                                          <option value="VMC">VMC</option>
+                                          <option value="IMC">IMC</option>
+                                      </select>
+                                    </div>
+                                  <h3>Wx :</h3><input type="text" placeholder="Weather" class="input is-small"/>
+                                </div>
+                                
                               </div>
                             </div>
+                            
                                                             
                             
                         </article>
@@ -105,7 +134,7 @@ export default {
   return {
     localMetReportText: "Met Report VTBD "+this.metReportText,
     runwayOptions: ['21', '21R', '21L', '03', '03L', '03R'],
-    selectedRunway: null
+    selectedRunway: '21'
   };
   },
   watch: {
@@ -124,16 +153,26 @@ export default {
         this.selectedRunway = this.atisRWY;
     },
   methods: {
-    check() {
-      console.log('qnh:', this.qnh);
-      console.log('mmHg:', this.mmHg);
-      console.log('metReportText:', this.metReportText);
-      console.log('localMetReportText:', this.localMetReportText);
-      console.log('atisInfo:', this.atisInfo);
-      console.log('atisRWY:', this.atisRWY);
-      console.log('atisWS:', this.atisWS);
+    getLeftButtonClass() {
+        if (this.selectedRunway === '21' || this.selectedRunway === '21R') return 'button is-success is-small custom-button';
+        if (this.selectedRunway === '21L' || this.selectedRunway === '03R') return 'button is-danger is-small custom-button';
+        if (this.selectedRunway === '03' || this.selectedRunway === '03L') return 'button is-success is-small custom-button';
+        return 'button is-small custom-button';
+    },
+    getRightButtonClass() {
+        if (this.selectedRunway === '21' || this.selectedRunway === '21L') return 'button is-success is-small custom-button';
+        if (this.selectedRunway === '21R' || this.selectedRunway === '03L') return 'button is-danger is-small custom-button';
+        if (this.selectedRunway === '03' || this.selectedRunway === '03R') return 'button is-success is-small custom-button';
+        return 'button is-small custom-button';
+    },
+    getLeftButtonLabel() {
+        return this.selectedRunway.startsWith('21') ? '21R' : '03L';
+    },
+    getRightButtonLabel() {
+        return this.selectedRunway.startsWith('21') ? '21L' : '03R';
     }
-  },
+  }
+
 }
 </script>
 
@@ -150,6 +189,11 @@ export default {
 
   .custom-button {
     margin-right: 10px;
+}
+
+.input
+ {
+    width: calc(100% - 10px) !important;/* Reducing the width by 10px */
 }
   /* Target the h6 with class 'atis-info' inside the box with class 'atis-info-box' */
   .atis-info-box .atis-info {
