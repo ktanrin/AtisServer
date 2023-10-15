@@ -8,7 +8,7 @@
                         <article class="tile box custom-header">
                             <div class="tile is-6 is-child">
                               <div>
-                                <h3>APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small" value="EXP ILS Z APCH RWY 21"/>
+                                <h3>APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info" value="EXP ILS Z APCH RWY 21"/>
                               </div>
                               <div>
                                 <h3>Met Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000"/>
@@ -19,8 +19,13 @@
                             </div>
                             <div class="tile is-child">
                               <div>
-                                <h3>ATIS RWY : {{ atisRWY }}</h3>
+                                <h3>RWY-IN-USE :</h3>
                                   <div>
+                                    <select v-model="selectedRunway" class="select is-small custom-button">
+                                        <option v-for="runway in runwayOptions" :key="runway" :value="runway">
+                                            {{ runway }}
+                                        </option>
+                                    </select>
                                     <button class = "button is-success is-small custom-button">21R</button>
                                     <button class = "button is-success is-small custom-button">21L</button>
                                   </div>
@@ -98,9 +103,26 @@ export default {
   },
   data() {
   return {
-    localMetReportText: "Met Report VTBD "+this.metReportText 
+    localMetReportText: "Met Report VTBD "+this.metReportText,
+    runwayOptions: ['21', '21R', '21L', '03', '03L', '03R'],
+    selectedRunway: null
   };
   },
+  watch: {
+        atisRWY: function(newValue) {
+            // When atisRWY updates, change the dropdown's selected value
+            this.selectedRunway = newValue;
+        },
+        selectedRunway: function(newValue) {
+            // Emit an event or handle the change accordingly
+            // Here, for demonstration, I'm logging the change.
+            console.log('Selected runway changed:', newValue);
+        }
+    },
+    mounted() {
+        // Set initial value of dropdown from atisRWY prop
+        this.selectedRunway = this.atisRWY;
+    },
   methods: {
     check() {
       console.log('qnh:', this.qnh);
