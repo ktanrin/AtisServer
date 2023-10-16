@@ -17,11 +17,11 @@
                                   padding-left: 0px;
                               "> 
                                 <div >
-                                  <h3>Met Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
+                                  <h3>ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1003Z"/>
                                   <h3>Vis :</h3><input type="text" placeholder="Visibility" class="input is-small" value="10KM"/>
                                 </div>
                                 <div>
-                                  <h3>ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
+                                  <h3>MET Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
                                   <h3>Temp :</h3><input type="text" placeholder="Temperature" class="input is-small" value="30C"/>
                                 </div>
                             </div> 
@@ -53,12 +53,13 @@
                                   <h3>Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small" value="24%"/>
                                 </div>                             
                                 <div>
-                                  <h3>Prevailing Wx :</h3>
-                                    <div>
-                                      <select class="select is-small custom-button">
+                                  <h3 style="background-color: grey; width: calc(100% - 10px);">Prevailing Wx :</h3>
+                                    <div class="prevail-wx-container">
+                                      <select class="select is-small custom-button prevail-button">
                                           <option value="VMC">VMC</option>
                                           <option value="IMC">IMC</option>
                                       </select>
+                                      <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input"/>
                                     </div>
                                   <h3>Wx :</h3><input type="text" placeholder="Weather" class="input is-small"/>
                                 </div>
@@ -189,6 +190,20 @@ export default {
 
   .custom-button {
     margin-right: 10px;
+}
+.prevail-wx-container{
+  display: flex;
+  align-items: center;
+  width: calc(100% - 10px) !important;/* Reducing the width by 10px */
+  background-color: grey;
+}
+.prevail-button {
+  width: 60% !important; /* adjust as needed */
+}
+
+.prevail-input {
+  width: 10% !important; /* subtracting margin */
+ 
 }
 
 .input
