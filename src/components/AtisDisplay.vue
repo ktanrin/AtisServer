@@ -1,28 +1,23 @@
 <template>
    <!-- Part 1: Header and Info -->
-   <body>
+   
     <div class="container block">
         <div class="tile is-ancestor">
-            <div class="tile is-8 is-parent is-vertical">
+            <div class="tile is-9 is-parent is-vertical">
               <!-- Header -->
                         <article class="tile box custom-header">
                             <div class="tile is-6 is-child">
                               <div>
-                                <h3>APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info" value="EXP ILS Z APCH RWY 21"/>
+                                <h3 class="custom-margin">APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info custom-margin" value="EXP ILS Z APCH RWY 21"/>
                               </div>
-                             <div class="tile is-parent" style="
-                                  padding-top: 0px;
-                                  padding-right: 0px;
-                                  padding-bottom: 0px;
-                                  padding-left: 0px;
-                              "> 
+                             <div class="tile is-parent padding-zero" >
                                 <div >
-                                  <h3>ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1003Z"/>
-                                  <h3>Vis :</h3><input type="text" placeholder="Visibility" class="input is-small" value="10KM"/>
+                                  <h3 class="custom-margin">ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" value="1003Z"/>
+                                  <h3 class="custom-margin">Vis :</h3><input type="text" placeholder="Visibility" class="input is-small custom-margin" value="10KM"/>
                                 </div>
                                 <div>
-                                  <h3>MET Report At :</h3><input type="text" placeholder="Time" class="input is-small" value="1000Z"/>
-                                  <h3>Temp :</h3><input type="text" placeholder="Temperature" class="input is-small" value="30C"/>
+                                  <h3 class="custom-margin">MET Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" value="1000Z"/>
+                                  <h3 class="custom-margin">Temp :</h3><input type="text" placeholder="Temperature" class="input is-small custom-margin" value="30C"/>
                                 </div>
                             </div> 
                               <div>
@@ -31,9 +26,9 @@
                             </div>
                             <div class="tile is-6 is-child">
                               <div>
-                                <h3>RWY-IN-USE :</h3>
+                                <h3 class="custom-margin">RWY-IN-USE :</h3>
                                   <div>
-                                    <select v-model="selectedRunway" class="select is-small custom-button">
+                                    <select v-model="selectedRunway" class="select is-small custom-margin">
                                         <option v-for="runway in runwayOptions" :key="runway" :value="runway">
                                             {{ runway }}
                                         </option>
@@ -42,26 +37,21 @@
                                     <button :class="getRightButtonClass()">{{ getRightButtonLabel() }}</button>
                                   </div>
                               </div>
-                              <div class="tile is-parent" style="
-                                  padding-top: 0px;
-                                  padding-right: 0px;
-                                  padding-bottom: 0px;
-                                  padding-left: 0px;
-                              ">
+                              <div class="tile is-parent is-12 padding-zero">
                                 <div>
-                                  <h3>Wind :</h3><input type="text" placeholder="Wind" class="input is-small" value="190/13KT"/>
-                                  <h3>Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small" value="24%"/>
+                                  <h3 class="custom-margin">Wind :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="190/13KT"/>
+                                  <h3 class="custom-margin">Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="24C"/>
                                 </div>                             
                                 <div>
-                                  <h3 style="background-color: grey; width: calc(100% - 10px);">Prevailing Wx :</h3>
-                                    <div class="prevail-wx-container">
-                                      <select class="select is-small custom-button prevail-button">
+                                      <h3 class="custom-prevail-text">Prevailing Wx :</h3>
+                                    <div class="prevail-wx-container ">
+                                      <select class="select is-small custom-margin prevail-button">
                                           <option value="VMC">VMC</option>
                                           <option value="IMC">IMC</option>
                                       </select>
-                                      <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input"/>
+                                      <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input is-fullwidth custom-margin"/>
                                     </div>
-                                  <h3>Wx :</h3><input type="text" placeholder="Weather" class="input is-small"/>
+                                  <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin"/>
                                 </div>
                                 
                               </div>
@@ -116,7 +106,7 @@
         </article>
       </div>
     </div>
-  </body>
+ 
 </template>
 
 <script>
@@ -155,16 +145,16 @@ export default {
     },
   methods: {
     getLeftButtonClass() {
-        if (this.selectedRunway === '21' || this.selectedRunway === '21R') return 'button is-success is-small custom-button';
-        if (this.selectedRunway === '21L' || this.selectedRunway === '03R') return 'button is-danger is-small custom-button';
-        if (this.selectedRunway === '03' || this.selectedRunway === '03L') return 'button is-success is-small custom-button';
-        return 'button is-small custom-button';
+        if (this.selectedRunway === '21' || this.selectedRunway === '21R') return 'button is-success is-small custom-margin';
+        if (this.selectedRunway === '21L' || this.selectedRunway === '03R') return 'button is-danger is-small custom-margin';
+        if (this.selectedRunway === '03' || this.selectedRunway === '03L') return 'button is-success is-small custom-margin';
+        return 'button is-small custom-margin';
     },
     getRightButtonClass() {
-        if (this.selectedRunway === '21' || this.selectedRunway === '21L') return 'button is-success is-small custom-button';
-        if (this.selectedRunway === '21R' || this.selectedRunway === '03L') return 'button is-danger is-small custom-button';
-        if (this.selectedRunway === '03' || this.selectedRunway === '03R') return 'button is-success is-small custom-button';
-        return 'button is-small custom-button';
+        if (this.selectedRunway === '21' || this.selectedRunway === '21L') return 'button is-success is-small custom-margin';
+        if (this.selectedRunway === '21R' || this.selectedRunway === '03L') return 'button is-danger is-small custom-margin';
+        if (this.selectedRunway === '03' || this.selectedRunway === '03R') return 'button is-success is-small custom-margin';
+        return 'button is-small custom-margin';
     },
     getLeftButtonLabel() {
         return this.selectedRunway.startsWith('21') ? '21R' : '03L';
@@ -180,35 +170,49 @@ export default {
   
   
   <style>
-  html,body{
+  html,body,template{
   background-color: lightskyblue;
+  }
+
+  .padding-zero{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
   }
 
   .custom-header {
     text-align: left;
   }
 
-  .custom-button {
-    margin-right: 10px;
+  .custom-margin {
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .prevail-wx-container{
   display: flex;
   align-items: center;
-  width: calc(100% - 10px) !important;/* Reducing the width by 10px */
-  background-color: grey;
+  background-color: lightgrey;
+
+  
 }
-.prevail-button {
-  width: 60% !important; /* adjust as needed */
+.custom-prevail-text {
+  /* adjust as needed */
+  padding-left: 5px;
+  background-color: lightgray;
+  color: crimson;
+ 
 }
 
 .prevail-input {
-  width: 10% !important; /* subtracting margin */
- 
+   /* subtracting margin */
+   width: calc(100% - 10px) !important;
 }
 
 .input
  {
-    width: calc(100% - 10px) !important;/* Reducing the width by 10px */
+  width: calc(100% - 10px) !important;
+  
 }
   /* Target the h6 with class 'atis-info' inside the box with class 'atis-info-box' */
   .atis-info-box .atis-info {
@@ -219,14 +223,14 @@ export default {
   }
   .qnh-box .qnh {
     width: 100%;
-    font-size: 350%;
+    font-size: 400%;
     font-weight: bold;
     display: block;
   }
 
   .mmHg-box .mmHg {
     width: 100%;
-    font-size: 350%;
+    font-size: 400%;
     font-weight: bold;
     display: block;
   }
