@@ -24,7 +24,7 @@
                                
                               </div>
                             </div>
-                            <div class="tile is-6 is-child">
+                            <div class="tile is-3 is-child">
                               <div>
                                 <h3 class="custom-margin">RWY-IN-USE :</h3>
                                   <div>
@@ -36,14 +36,19 @@
                                     <button :class="getLeftButtonClass()">{{ getLeftButtonLabel() }}</button>
                                     <button :class="getRightButtonClass()">{{ getRightButtonLabel() }}</button>
                                   </div>
+                                  
                               </div>
                               <div class="tile is-parent is-12 padding-zero">
                                 <div>
                                   <h3 class="custom-margin">Wind :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="190/13KT"/>
                                   <h3 class="custom-margin">Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="24C"/>
                                 </div>                             
-                                <div>
-                                      <h3 class="custom-prevail-text">Prevailing Wx :</h3>
+                                
+                                
+                              </div>
+                            </div>
+                            <div class="tile is-3 is-child">
+                              <h3 class="custom-prevail-text">Prevailing Wx :</h3>
                                     <div class="prevail-wx-container ">
                                       <select class="select is-small custom-margin prevail-button">
                                           <option value="VMC">VMC</option>
@@ -51,10 +56,10 @@
                                       </select>
                                       <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input is-fullwidth custom-margin"/>
                                     </div>
+                                    <div>
+                                  <h3 class="custom-margin">RVR :</h3><input type="text" placeholder="Runway Visual Range" class="input is-small custom-margin"/>
                                   <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin"/>
                                 </div>
-                                
-                              </div>
                             </div>
                             
                                                             
@@ -170,7 +175,7 @@ export default {
   
   
   <style>
-  html,body,template{
+  html,body,template,header,footer,article{
   background-color: lightskyblue;
   }
 
@@ -223,14 +228,14 @@ export default {
   }
   .qnh-box .qnh {
     width: 100%;
-    font-size: 400%;
+    font-size: 500%;
     font-weight: bold;
     display: block;
   }
 
   .mmHg-box .mmHg {
     width: 100%;
-    font-size: 400%;
+    font-size: 500%;
     font-weight: bold;
     display: block;
   }
