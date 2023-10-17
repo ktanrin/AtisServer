@@ -128,10 +128,15 @@ export default {
   },
   data() {
   return {
-    localMetReportText: "Met Report VTBD "+this.metReportText,
+    
     runwayOptions: ['21', '21R', '21L', '03', '03L', '03R'],
     selectedRunway: '21'
   };
+  },
+  computed: {
+  localMetReportText() {
+    return "Met Report VTBD " + this.metReportText;
+  }
   },
   watch: {
         atisRWY: function(newValue) {
@@ -175,8 +180,8 @@ export default {
   
   
   <style>
-  html,body,template,header,footer,article{
-  background-color: lightskyblue;
+  html,body,header,footer{
+  background-color: lightskyblue !important;
   }
 
   .padding-zero{
