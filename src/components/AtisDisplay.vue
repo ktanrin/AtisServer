@@ -12,7 +12,7 @@
                               </div>
                              <div class="tile is-parent padding-zero" >
                                 <div >
-                                  <h3 class="custom-margin">ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" value="1003Z"/>
+                                  <h3 class="custom-margin">ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" :value="atisTime" readonly/>
                                   <h3 class="custom-margin">Vis :</h3><input type="text" placeholder="Visibility" class="input is-small custom-margin" value="10KM"/>
                                 </div>
                                 <div>
@@ -120,6 +120,7 @@ export default {
       error: String,
       atisInfo: String,
       atisRWY: String,
+      atisTime: String,
       atisWS: String,
       rcrContent: String,
       metReportText: String,
@@ -150,6 +151,7 @@ export default {
         }
     },
     mounted() {
+      console.log('atisTime value:', this.atisTime);
         // Set initial value of dropdown from atisRWY prop
         this.selectedRunway = this.atisRWY;
     },

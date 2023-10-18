@@ -29,6 +29,7 @@ export default {
       error: null,
       atisInfo: null,
       atisRWY: null,
+      atisTime: null,
       rcrContent: null,
       metReportText: null,
       qnh: null,
@@ -40,6 +41,7 @@ export default {
       this.error = data.error;
       this.atisInfo = data.atisInfo?.atisInfo || null;
       this.atisRWY = data.atisRWY?.atisRWY || null;
+      this.atisTime = data.atisTime?.atisTime || null;
       this.rcrContent = data.rcrContent?.rcrContent || null;
       this.metReportText = data.metReportText?.metReportText || null;
       this.qnh = data.qnh?.qnh || null;
@@ -50,6 +52,7 @@ export default {
       console.log(data.atisInfo);
       console.log(data.atisRWY);
       console.log(data.rcrContent);
+      console.log(data.atisTime);
     }
   }
 };

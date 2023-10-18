@@ -13,6 +13,7 @@ export default {
       selectedFilePath: '',
       parsedAtisInfo: null,
       parsedAtisRWY: null,
+      parsedAtisTime: null,
       parsedRCR: null,
       parsedMetReport: null,
       parsedQNHqnh: null,
@@ -53,6 +54,7 @@ export default {
           // Parse ATIS info and store it
           this.parsedAtisInfo = this.parseAtisInfo(response.data);
           this.parsedAtisRWY = this.parseAtisRWY(response.data);
+          this.parsedAtisTime = this.parseAtisTime(response.data);
           this.parsedWindShear = this.parseWindShear(response.data);
           this.parsedRCR = this.parseRCR(response.data);
           this.parsedMetReport = this.parseMetReport(response.data);
@@ -63,6 +65,7 @@ export default {
           this.$emit('atis-data-parsed', {
           atisInfo: this.parsedAtisInfo,
           atisRWY: this.parsedAtisRWY,
+          atisTime: this.parsedAtisTime,
           atisWS: this.parsedWindShear,
           rcrContent: this.parsedRCR,
           metReportText: this.parsedMetReport,
@@ -81,6 +84,19 @@ export default {
       
 
     },
+
+    parseAtisTime(data) {
+    const lines = data.split('\n'); // Split the content into lines
+    if (lines.length >= 6) {
+      const atisTimeLine = lines[5]; // Line 6 (zero-based index)
+      const words = atisTimeLine.trim().split(/\s+/); // Split the line into words
+      const atisTime = words[0]; // Extract the first word
+      if (/^\d{4}Z$/.test(atisTime)) { // Check if it matches the ATIS time format (e.g., 0055Z)
+        return { atisTime };
+      }
+    }
+    return { error: 'Invalid content format' };
+  },
 
     parseAtisInfo(data) {
         const lines = data.split('\n'); // Split the content into lines
