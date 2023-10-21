@@ -8,16 +8,16 @@
                         <article class="tile box custom-header">
                             <div class="tile is-6 is-child">
                               <div>
-                                <h3 class="custom-margin">APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info custom-margin" value="EXP ILS Z APCH RWY 21"/>
+                                <h3 class="custom-margin">APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info custom-margin" :value="appType"/>
                               </div>
                              <div class="tile is-parent padding-zero" >
                                 <div >
                                   <h3 class="custom-margin">ATIS Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" :value="atisTime" readonly/>
-                                  <h3 class="custom-margin">Vis :</h3><input type="text" placeholder="Visibility" class="input is-small custom-margin" value="10KM"/>
+                                  <h3 class="custom-margin">Vis :</h3><input type="text" placeholder="Visibility" class="input is-small custom-margin" :value="visibility" readonly/>
                                 </div>
                                 <div>
-                                  <h3 class="custom-margin">MET Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" value="1000Z"/>
-                                  <h3 class="custom-margin">Temp :</h3><input type="text" placeholder="Temperature" class="input is-small custom-margin" value="30C"/>
+                                  <h3 class="custom-margin">MET Report At :</h3><input type="text" placeholder="Time" class="input is-small custom-margin" :value="metReportTime" readonly/>
+                                  <h3 class="custom-margin">Temp :</h3><input type="text" placeholder="Temperature" class="input is-small custom-margin" :value="temperature" readonly/>
                                 </div>
                             </div> 
                               <div>
@@ -40,8 +40,8 @@
                               </div>
                               <div class="tile is-parent is-12 padding-zero">
                                 <div>
-                                  <h3 class="custom-margin">Wind :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="190/13KT"/>
-                                  <h3 class="custom-margin">Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" value="24C"/>
+                                  <h3 class="custom-margin">Wind :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" :value="windInfo" readonly/>
+                                  <h3 class="custom-margin">Dew Point :</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" :value="dewPoint" readonly/>
                                 </div>                             
                                 
                                 
@@ -58,7 +58,7 @@
                                     </div>
                                     <div>
                                   <h3 class="custom-margin">RVR :</h3><input type="text" placeholder="Runway Visual Range" class="input is-small custom-margin"/>
-                                  <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin"/>
+                                  <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin" :value="weather" readonly/>
                                 </div>
                             </div>
                             
@@ -118,12 +118,19 @@
 export default {
   props: {
       error: String,
+      appType: String,
       atisInfo: String,
       atisRWY: String,
       atisTime: String,
+      metReportTime: String,
       atisWS: String,
       rcrContent: String,
       metReportText: String,
+      windInfo: String,
+      visibility: String,
+      temperature: String,
+      dewPoint: String,
+      weather: String,
       qnh: String,
       mmHg: String   
   },
@@ -169,10 +176,10 @@ export default {
         return 'button is-small custom-margin';
     },
     getLeftButtonLabel() {
-        return this.selectedRunway.startsWith('21') ? '21R' : '03L';
+        return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21R' : '03L';
     },
     getRightButtonLabel() {
-        return this.selectedRunway.startsWith('21') ? '21L' : '03R';
+        return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03R';
     }
   }
 

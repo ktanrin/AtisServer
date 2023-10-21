@@ -11,11 +11,18 @@ export default {
       fileContent: null,
       error: null,
       selectedFilePath: '',
+      parsedAppType: null,
       parsedAtisInfo: null,
       parsedAtisRWY: null,
       parsedAtisTime: null,
       parsedRCR: null,
       parsedMetReport: null,
+      parsedWind: null,
+      parsedVisibility: null,
+      parsedTemperature: null,
+      parsedDewPoint: null,
+      parsedWeather: null,
+      parsedMetReportTime: null,
       parsedQNHqnh: null,
       parsedmmHg: null,
       parsedWindShear: null
@@ -52,23 +59,37 @@ export default {
         if (response.success) {
           this.fileContent = response.data;
           // Parse ATIS info and store it
+          this.parsedAppType = this.parseAppType(response.data);
           this.parsedAtisInfo = this.parseAtisInfo(response.data);
           this.parsedAtisRWY = this.parseAtisRWY(response.data);
           this.parsedAtisTime = this.parseAtisTime(response.data);
+          this.parsedMetReportTime = this.parseMetReportTime(response.data);
           this.parsedWindShear = this.parseWindShear(response.data);
           this.parsedRCR = this.parseRCR(response.data);
           this.parsedMetReport = this.parseMetReport(response.data);
+          this.parsedWind = this.parseWind(response.data);
+          this.parsedVisibility = this.parseVisibility(response.data);
+          this.parsedTemperature = this.parseTemperature(response.data);
+          this.parsedDewPoint = this.parseDewPoint(response.data);
+          this.parsedWeather = this.parseWeather(response.data);
           this.parsedQNH = this.parseQNH(response.data);
           this.parsedmmHg = this.parsemmHg(response.data);
 
           // Emit the parsed data to the parent component
           this.$emit('atis-data-parsed', {
+          appType: this.parsedAppType,
           atisInfo: this.parsedAtisInfo,
           atisRWY: this.parsedAtisRWY,
           atisTime: this.parsedAtisTime,
+          metReportTime: this.parsedMetReportTime,
           atisWS: this.parsedWindShear,
           rcrContent: this.parsedRCR,
           metReportText: this.parsedMetReport,
+          windInfo: this.parsedWind,
+          visibility: this.parsedVisibility,
+          temperature: this.parsedTemperature,
+          dewPoint: this.parsedDewPoint,
+          weather: this.parsedWeather,
           qnh: this.parsedQNH,
           mmHg: this.parsedmmHg
           });
@@ -83,6 +104,126 @@ export default {
 
       
 
+    },
+
+    parseWeather(data) {
+    // Match "VIS" followed by KM or M and capture everything until "CLD"
+    const weatherRegex = /VIS (\d+KM|\d+M) ([A-Z\s]+) CLD/;
+    
+    const match = data.match(weatherRegex);
+
+    if (match && match[2]) {
+        const weather = match[2].trim();
+        console.log(weather);
+        return { weather };
+    }
+    return 'N/A';
+    },
+
+    parseAppType(data) {
+    const lines = data.split('\n'); // Split the content into lines
+    if (lines.length >= 6) {
+      const appTypeLine = lines[5]; // Line 6 (zero-based index)
+
+      // Skip the first word (time) and look for any approach type information, until a comma is reached
+      const appTypeRegex = /\S+\s(.*?)\s*,/;
+      const appTypeMatch = appTypeLine.match(appTypeRegex);
+
+      if (appTypeMatch && appTypeMatch[1]) {
+        return { appType: appTypeMatch[1] };
+      } else {
+        // If no comma is found, try matching any text after the time until the end of the line
+        const alternativeRegex = /\S+\s(.*)/;
+        const alternativeMatch = appTypeLine.match(alternativeRegex);
+        if (alternativeMatch && alternativeMatch[1]) {
+          return { appType: alternativeMatch[1] };
+        }
+      }
+    }
+    
+    return { appType: 'N/A' }; // Return "N/A" if no approach type information was found
+  },
+
+    parseDewPoint(data) {
+    // Split the content into words by spaces
+    const words = data.split(/\s+/);
+
+    for (const word of words) {
+      //console.log('Examining word:', word);
+      const dewPointRegex = /^DP(\d{1,2})$/; // Make sure we're matching the whole word
+      const dewPointMatch = word.match(dewPointRegex);
+      if (dewPointMatch && dewPointMatch[1]) {
+        return { dewPoint: `${dewPointMatch[1]}C` };
+      }
+    }
+
+    return { dewPoint: 'N/A' };  // return "N/A" if no dew point data was found
+  },
+
+    parseTemperature(data) {
+    // Split the content into words by spaces
+    const words = data.split(/\s+/);
+
+    // Iterate over words and look for a match
+    for (const word of words) {
+      const temperatureRegex = /^T(\d{1,2})$/;  // Make sure we're matching the whole word
+      const tempMatch = word.match(temperatureRegex);
+      if (tempMatch && tempMatch[1]) {
+        return { temperature: `${tempMatch[1]}C` };
+      }
+    }
+    
+    return { temperature: 'N/A' };  // return "N/A" if no temperature data was found
+},
+
+
+    parseVisibility(data) {
+    // Split the content into words by spaces
+    const words = data.split(/\s+/);
+
+    // Find the index of "VIS" in the words array
+    const visIndex = words.findIndex((word) => word === 'VIS');
+
+    if (visIndex !== -1 && visIndex < words.length - 1) {
+      // Extract the word following "VIS"
+      const visibility = words[visIndex + 1];
+      return { visibility };
+    }
+    
+    return { error: 'Visibility not found' };
+},
+
+    parseWind(data) {
+    // Split the content into words by spaces
+    const words = data.split(/\s+/);
+
+    // Find the index of "WIND" and "VIS" in the words array
+    const windIndex = words.findIndex((word) => word === 'WIND');
+    const visIndex = words.findIndex((word) => word === 'VIS');
+
+    if (windIndex !== -1 && visIndex !== -1 && windIndex < visIndex) {
+      // Extract the wind report between "WIND" and "VIS"
+      const windReportWords = words.slice(windIndex + 1, visIndex);
+      const windInfo = windReportWords.join(' ');
+      return { windInfo };
+    }
+
+    return { error: 'Wind report not found' };
+},
+
+    parseMetReportTime(data) {
+     // Split the content into words by spaces
+    const words = data.trim().split(/\s+/);
+    const windIndex = words.findIndex(word => word === 'WIND');
+
+    if (windIndex !== -1 && windIndex > 0) {
+      const metReportTime = words[windIndex - 1];
+      if (/^\d{4}Z$/.test(metReportTime)) { // Check if it matches the MET report time format (e.g., 0055Z)
+        return { metReportTime };
+      }
+    }
+
+    return { error: 'MET report time not found' };
     },
 
     parseAtisTime(data) {
@@ -165,7 +306,10 @@ parseMetReport(data) {
   // Find the index of "WIND" and "ADZ" in the words array
   const windIndex = words.findIndex((word) => word === 'WIND');
   const adzIndex = words.findIndex((word) => word === 'ADZ');
-  
+  //const trendIndex = words.findIndex((word) => word === 'TREND');
+  //const endIndex = (adzIndex !== -1) ? adzIndex : trendIndex;
+
+  //if (windIndex !== -1 && endIndex !== -1 && windIndex < endIndex)
 
   if (windIndex !== -1 && adzIndex !== -1 && windIndex < adzIndex) {
     // Extract the MET report between "WIND" and "ADZ"

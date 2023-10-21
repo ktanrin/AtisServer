@@ -3,10 +3,18 @@
     <AtisReader @atis-data-parsed="updateAtisData" />
     <AtisDisplay 
       :error="error"
+      :appType="appType"
       :atisInfo="atisInfo"
       :atisRWY="atisRWY"
+      :atisTime ="atisTime"
+      :metReportTime="metReportTime"
       :rcrContent="rcrContent"
       :metReportText="metReportText"
+      :windInfo="windInfo"
+      :visibility="visibility"
+      :temperature="temperature"
+      :dewPoint="dewPoint"
+      :weather="weather"
       :qnh="qnh"
       :mmHg="mmHg"
     />
@@ -27,11 +35,18 @@ export default {
   data() {
     return {
       error: null,
+      appType: null,
       atisInfo: null,
       atisRWY: null,
       atisTime: null,
+      metReportTime: null,
       rcrContent: null,
       metReportText: null,
+      windInfo: null,
+      visibility: null,
+      temperature: null,
+      weather: null,
+      dewPoint: null,
       qnh: null,
       mmHg: null
     };
@@ -39,20 +54,34 @@ export default {
   methods: {
     updateAtisData(data) {
       this.error = data.error;
+      this.appType = data.appType?.appType || null;
       this.atisInfo = data.atisInfo?.atisInfo || null;
       this.atisRWY = data.atisRWY?.atisRWY || null;
       this.atisTime = data.atisTime?.atisTime || null;
+      this.metReportTime = data.metReportTime?.metReportTime || null;
       this.rcrContent = data.rcrContent?.rcrContent || null;
       this.metReportText = data.metReportText?.metReportText || null;
+      this.windInfo = data.windInfo?.windInfo || null;
+      this.visibility = data.visibility?.visibility || null;
+      this.temperature = data.temperature?.temperature || null;
+      this.dewPoint = data.dewPoint?.dewPoint || null;
+      this.weather = data.weather?.weather || null;
       this.qnh = data.qnh?.qnh || null;
       this.mmHg = data.mmHg?.mmHg || null;
-      console.log(data.qnh);
-      console.log(data.mmHg);
-      console.log(data.metReportText);
-      console.log(data.atisInfo);
-      console.log(data.atisRWY);
-      console.log(data.rcrContent);
-      console.log(data.atisTime);
+      // console.log(data.qnh);
+      // console.log(data.mmHg);
+      // console.log(data.metReportText);
+      // console.log(data.atisInfo);
+      // console.log(data.atisRWY);
+      // console.log(data.rcrContent);
+      // console.log(data.atisTime);
+      // console.log(data.metReportTime)
+      // console.log(data.windInfo);
+      // console.log(data.visibility);
+      // console.log(data.temperature);
+      // console.log(data.dewPoint);
+      // console.log(data.appType);
+      console.log(data.weather);
     }
   }
 };
