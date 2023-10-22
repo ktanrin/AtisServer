@@ -57,7 +57,7 @@
                                       <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input is-fullwidth custom-margin"/>
                                     </div>
                                     <div>
-                                  <h3 class="custom-margin">RVR :</h3><input type="text" placeholder="Runway Visual Range" class="input is-small custom-margin"/>
+                                  <h3 class="custom-margin">RVR :</h3><input type="text" placeholder="Runway Visual Range" class="input is-small custom-margin" :value="rvr" readonly/>
                                   <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin" :value="weather" readonly/>
                                 </div>
                             </div>
@@ -128,6 +128,7 @@ export default {
       metReportText: String,
       windInfo: String,
       visibility: String,
+      rvr: String,
       temperature: String,
       dewPoint: String,
       weather: String,

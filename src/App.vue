@@ -12,6 +12,7 @@
       :metReportText="metReportText"
       :windInfo="windInfo"
       :visibility="visibility"
+      :rvr="rvr"
       :temperature="temperature"
       :dewPoint="dewPoint"
       :weather="weather"
@@ -44,6 +45,7 @@ export default {
       metReportText: null,
       windInfo: null,
       visibility: null,
+      rvr: null,
       temperature: null,
       weather: null,
       dewPoint: null,
@@ -63,6 +65,7 @@ export default {
       this.metReportText = data.metReportText?.metReportText || null;
       this.windInfo = data.windInfo?.windInfo || null;
       this.visibility = data.visibility?.visibility || null;
+      this.rvr = data.rvr?.rvr || null;
       this.temperature = data.temperature?.temperature || null;
       this.dewPoint = data.dewPoint?.dewPoint || null;
       this.weather = data.weather?.weather || null;
@@ -82,6 +85,7 @@ export default {
       // console.log(data.dewPoint);
       // console.log(data.appType);
       console.log(data.weather);
+      console.log(data.rvr);
     }
   }
 };

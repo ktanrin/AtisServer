@@ -19,6 +19,7 @@ export default {
       parsedMetReport: null,
       parsedWind: null,
       parsedVisibility: null,
+      parsedRVR: null,
       parsedTemperature: null,
       parsedDewPoint: null,
       parsedWeather: null,
@@ -69,6 +70,7 @@ export default {
           this.parsedMetReport = this.parseMetReport(response.data);
           this.parsedWind = this.parseWind(response.data);
           this.parsedVisibility = this.parseVisibility(response.data);
+          this.parsedRVR = this.parseRVR(response.data);
           this.parsedTemperature = this.parseTemperature(response.data);
           this.parsedDewPoint = this.parseDewPoint(response.data);
           this.parsedWeather = this.parseWeather(response.data);
@@ -87,6 +89,7 @@ export default {
           metReportText: this.parsedMetReport,
           windInfo: this.parsedWind,
           visibility: this.parsedVisibility,
+          rvr: this.parsedRVR,
           temperature: this.parsedTemperature,
           dewPoint: this.parsedDewPoint,
           weather: this.parsedWeather,
@@ -106,18 +109,68 @@ export default {
 
     },
 
-    parseWeather(data) {
-    // Match "VIS" followed by KM or M and capture everything until "CLD"
-    const weatherRegex = /VIS (\d+KM|\d+M) ([A-Z\s]+) CLD/;
-    
-    const match = data.match(weatherRegex);
+    parseRVR(data) {
 
-    if (match && match[2]) {
-        const weather = match[2].trim();
-        console.log(weather);
+      const rvrRegex = /RWY (\d{2}[RL]?) ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?)(?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?((?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?)?/g;
+
+      let match;
+      const rvrValues = [];
+      const lines = data.split('\n');
+
+      for (let line of lines) {
+        let lineRVRs = [];
+        while ((match = rvrRegex.exec(line)) !== null) {
+            const runway = match[1];
+            const segments = [];
+
+            for (let i = 2; i <= 5; i++) {
+                if (match[i]) {
+                    const segmentData = match[i].trim();
+                    segments.push(segmentData);
+                }
+            }
+
+          const parsedSegments = segments.map(segment => {
+              return segment;
+          });
+
+          lineRVRs.push(`RWY ${runway} ${parsedSegments.join(' ')}`);
+          if (lineRVRs.length > 0) {
+            rvrValues.push(lineRVRs.join(' ')); // Add a space between parsed values.
+        }
+          console.log(rvrValues);
+      }
+
+    }
+
+      if (rvrValues.length > 0) {
+          return { rvr: rvrValues.join(' ') };
+      } else {
+          return { rvr: 'RVR not found' };
+      }
+    },
+
+    parseWeather(data) {
+    // Intensity codes
+    const intensityCodes = ['FBL', 'MOD', 'HVY'];
+
+    // Weather characteristic codes
+    const weatherCharCodes = [
+        'DZ', 'RA', 'SN', 'SG', 'PL', 'DS', 'SS', 'FZDZ', 'FZUP', 'FC', 'FZRA', 'SHGR', 'SHGS',
+        'SHRA', 'SHSN', 'SHUP', 'TSGR', 'TSGS', 'TSRA', 'TSSN', 'TSUP', 'UP', 'FG', 'BR', 'SA',
+        'DU', 'HZ', 'FU', 'VA', 'SQ', 'PO', 'TS', 'BCFG', 'BLDU', 'BLSA', 'BLSN', 'DRDU', 'DRSA', 'DRSN',
+        'FZFG', 'MIFG', 'PRFG'
+    ];
+
+    // Regular expression to match optional intensity and the weather codes
+    const weatherRegex = new RegExp('(?:\\b(' + intensityCodes.join('|') + ')? ?(' + weatherCharCodes.join('|') + ')\\b)', 'g');
+
+    const matches = data.match(weatherRegex);
+    if (matches) {
+        const weather = matches.join(' ');
         return { weather };
     }
-    return 'N/A';
+    return { weather: 'N/A' };
     },
 
     parseAppType(data) {
