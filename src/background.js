@@ -7,9 +7,17 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 const fs = require('fs');
 const path = require('path');
 // const debug = require('electron-debug');
+//const express = require('express');
+//const http = require('http');
 
-// // Enable the inspection tool
-// debug({ showDevTools: true });
+//const expressApp = express();
+//const server = http.createServer(expressApp);
+const server = require('./server.js'); 
+
+// expressApp.get('/get-atis-data', (req, res) => {
+//   console.log('Sending ATIS data to client:', global.sharedATISData);
+//   res.send(global.$sharedATISData || {});
+// });
 
 let selectedFilePath;
 
@@ -136,6 +144,10 @@ async function createWindow() {
 }
 
 app.on('window-all-closed', () => {
+   // Stop the Express.js server
+  //  server.close(() => {
+  //   console.log('Express server stopped');
+  // });
   if (process.platform !== 'darwin') {
     app.quit();
   }
@@ -146,6 +158,10 @@ app.on('activate', () => {
 });
 
 app.on('ready', async () => {
+    // Start Express.js server on port 3000
+    // server.listen(3000, '0.0.0.0',() => {
+    //   console.log('Express server started on port 3000');
+    // });
   if (isDevelopment && !process.env.IS_TEST) {
     try {
       await installExtension(VUEJS3_DEVTOOLS);

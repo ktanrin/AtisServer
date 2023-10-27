@@ -8,7 +8,7 @@
                         <article class="tile box custom-header">
                             <div class="tile is-6 is-child">
                               <div>
-                                <h3 class="custom-margin">APP-TYPE :</h3><input type="text" placeholder="APP-TYPE" class="input is-small is-info custom-margin" :value="appType"/>
+                                <h3 class="custom-margin">APP-TYPE :</h3><input type="text" @input="updateAppType" placeholder="APP-TYPE" class="input is-small is-info custom-margin" :value="appType"/>
                               </div>
                              <div class="tile is-parent padding-zero" >
                                 <div >
@@ -28,7 +28,7 @@
                               <div>
                                 <h3 class="custom-margin">RWY-IN-USE :</h3>
                                   <div>
-                                    <select v-model="selectedRunway" class="select is-small custom-margin">
+                                    <select v-model="selectedRunway" @change="sendData" class="select is-small custom-margin">
                                         <option v-for="runway in runwayOptions" :key="runway" :value="runway">
                                             {{ runway }}
                                         </option>
@@ -50,15 +50,17 @@
                             <div class="tile is-3 is-child">
                               <h3 class="custom-prevail-text">Prevailing Wx :</h3>
                                     <div class="prevail-wx-container ">
-                                      <select class="select is-small custom-margin prevail-button">
+                                      <select class="select is-small custom-margin prevail-button" @change="sendData">
                                           <option value="VMC">VMC</option>
                                           <option value="IMC">IMC</option>
                                       </select>
                                       <input type="text" placeholder="Prevailing Wx " class="input is-small prevail-input is-fullwidth custom-margin"/>
                                     </div>
                                     <div>
-                                  <h3 class="custom-margin">RVR :</h3><input type="text" placeholder="Runway Visual Range" class="input is-small custom-margin" :value="rvr" readonly/>
-                                  <h3 class="custom-margin">Wx :</h3><input type="text" placeholder="Weather" class="input is-small custom-margin" :value="weather" readonly/>
+                                  <h3 class="custom-margin">RVR :</h3><input type="text" :placeholder="rvr === 'N/A' || !rvr ? 'Runway Visual Range' : ''" 
+                                                                      class="input is-small custom-margin" :value="rvr !== 'N/A' ? rvr : ''"  readonly/>
+                                  <h3 class="custom-margin">Wx :</h3><input type="text" :placeholder="weather === 'N/A' || !weather ? 'Weather' : ''" 
+                                                                      class="input is-small custom-margin" :value="weather !== 'N/A' ? weather : ''" readonly/>
                                 </div>
                             </div>
                             
@@ -97,9 +99,9 @@
     <div class="container block">
       
         <article class="box">
-          <input type="text" placeholder="SUP" class="input is-fullwidth"/>
+          <input type="text"  @input="sendData" placeholder="SUP" class="input is-fullwidth"/>
           <br>
-          <input type="text" placeholder="RMK" class="input is-fullwidth"/>
+          <input type="text"  @input="sendData" placeholder="RMK" class="input is-fullwidth"/>
         </article>
       
     </div>
@@ -107,7 +109,7 @@
     <div class="container block">
       <div class="tile">
         <article class="tile box">
-          <textarea class="textarea is-fullwidth" rows="2" placeholder="Met Report" v-model="localMetReportText"></textarea>
+          <textarea class="textarea is-fullwidth"  @input="sendData" rows="2" placeholder="Met Report" v-model="localMetReportText"></textarea>
         </article>
       </div>
     </div>
@@ -115,6 +117,10 @@
 </template>
 
 <script>
+
+import { reactive, toRefs } from 'vue';
+import io from 'socket.io-client';
+
 export default {
   props: {
       error: String,
@@ -135,6 +141,61 @@ export default {
       qnh: String,
       mmHg: String   
   },
+  setup(props) {
+        const socket = io('http://localhost:3000');
+
+        const localData = reactive({
+          appType: props.appType
+        });
+
+        const updateAppType = (event) => {
+          localData.appType = event.target.value;
+          sendData();
+        };
+        
+        // This makes props reactive and usable inside setup
+        const reactiveProps = toRefs(props);
+
+       
+
+      
+        
+
+        const sendData = () => {
+            if (!reactiveProps) {
+              console.error('Props are not defined');
+              return;
+          }
+        const dataToSend = {
+        error: reactiveProps.error.value,
+        appType: localData.appType,
+        atisInfo: reactiveProps.atisInfo.value,
+        atisRWY: reactiveProps.atisRWY.value,
+        atisTime: reactiveProps.atisTime.value,
+        metReportTime: reactiveProps.metReportTime.value,
+        atisWS: reactiveProps.atisWS.value,
+        rcrContent: reactiveProps.rcrContent.value,
+        windInfo: reactiveProps.windInfo.value,
+        visibility: reactiveProps.visibility.value,
+        rvr: reactiveProps.rvr.value,
+        temperature: reactiveProps.temperature.value,
+        dewPoint: reactiveProps.dewPoint.value,
+        weather: reactiveProps.weather.value,
+        qnh: reactiveProps.qnh.value,
+        mmHg: reactiveProps.mmHg.value,
+        
+        // ... include all other props here ...
+      };
+      console.log('Sending data:', dataToSend);  // Log data for debugging
+      socket.emit('send-data', dataToSend);
+    };
+      
+          return {
+            localData,
+            updateAppType,  
+            sendData
+          };
+    },
   data() {
   return {
     
@@ -156,7 +217,15 @@ export default {
             // Emit an event or handle the change accordingly
             // Here, for demonstration, I'm logging the change.
             console.log('Selected runway changed:', newValue);
-        }
+        },
+        localMetReportText: function(newValue) {
+          // Emit an event or handle the change accordingly
+          // Here, for demonstration, I'm logging the change.
+          console.log('Met Report changed:', newValue);
+        },
+        
+
+        
     },
     mounted() {
       console.log('atisTime value:', this.atisTime);
@@ -182,6 +251,7 @@ export default {
     getRightButtonLabel() {
         return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03R';
     }
+
   }
 
 }

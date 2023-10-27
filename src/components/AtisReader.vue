@@ -146,7 +146,7 @@ export default {
       if (rvrValues.length > 0) {
           return { rvr: rvrValues.join(' ') };
       } else {
-          return { rvr: 'RVR not found' };
+          return { rvr: 'N/A' };
       }
     },
 
