@@ -187,7 +187,8 @@ export default {
         // ... include all other props here ...
       };
       console.log('Sending data:', dataToSend);  // Log data for debugging
-      socket.emit('send-data', dataToSend);
+      //console.log(`Emitting event: ${send-data}`);
+      socket.emit('sendDataFromDisplays', dataToSend);
     };
       
           return {

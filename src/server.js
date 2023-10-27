@@ -12,6 +12,7 @@ const io = socketIo(server, {
   });
 
 const cors = require('cors');
+const { send } = require('process');
 
 app.use(cors());
 
@@ -25,8 +26,7 @@ io.on('connection', (socket) => {
     console.log('New client connected');
     console.log(socket.id);
     // Listen for data from the display component
-    
-    socket.on('sendDataFromDisplay', (data) => {
+    socket.on('sendDataFromDisplays', (data) => {
         console.log('Received data from display component:', data);
 
         atisData = data;
