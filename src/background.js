@@ -14,10 +14,6 @@ const path = require('path');
 //const server = http.createServer(expressApp);
 const server = require('./server.js'); 
 
-// expressApp.get('/get-atis-data', (req, res) => {
-//   console.log('Sending ATIS data to client:', global.sharedATISData);
-//   res.send(global.$sharedATISData || {});
-// });
 
 let selectedFilePath;
 

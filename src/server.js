@@ -12,21 +12,25 @@ const io = socketIo(server, {
   });
 
 const cors = require('cors');
-const { send } = require('process');
 
 app.use(cors());
 
 let atisData = {};  // Initialize with an empty object or a default value
 
-app.get("/socket.io/socket.io.js", (req, res) => {
-    res.sendFile(require.resolve("socket.io/client-dist/socket.io.js"));
-  });
+// app.get("/socket.io/socket.io.js", (req, res) => {
+//     res.sendFile(require.resolve("socket.io/client-dist/socket.io.js"));
+//   });
+
+  app.get('/', (req, res) => {
+    res.send("Server is running. Socket.io is listening on port 3000");
+});
 
 io.on('connection', (socket) => {
-    console.log('New client connected');
+    console.log('New client connected'); 
     console.log(socket.id);
     // Listen for data from the display component
-    socket.on('sendDataFromDisplays', (data) => {
+    
+    socket.on('sendDataFromDisplay', (data) => {
         console.log('Received data from display component:', data);
 
         atisData = data;
@@ -42,9 +46,7 @@ io.on('connection', (socket) => {
     });
 });
 
-app.get('/', (req, res) => {
-    res.send(atisData);
-});
+
 
 server.listen(3000, '0.0.0.0',() => {
     console.log('Server is running on port 3000');
