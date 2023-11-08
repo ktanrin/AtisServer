@@ -135,12 +135,12 @@ export default {
           });
 
           lineRVRs.push(`RWY ${runway} ${parsedSegments.join(' ')}`);
-          if (lineRVRs.length > 0) {
+          
+          //console.log(rvrValues);
+      }
+      if (lineRVRs.length > 0) {
             rvrValues.push(lineRVRs.join(' ')); // Add a space between parsed values.
         }
-          console.log(rvrValues);
-      }
-
     }
 
       if (rvrValues.length > 0) {
