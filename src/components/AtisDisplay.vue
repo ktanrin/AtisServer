@@ -138,6 +138,7 @@ export default {
      temperature: String,
      dewPoint: String,
      weather: String,
+     clouds: String,
      qnh: String,
      mmHg: String   
  },
@@ -187,6 +188,7 @@ export default {
        temperature: reactiveProps.temperature.value,
        dewPoint: reactiveProps.dewPoint.value,
        weather: reactiveProps.weather.value,
+       clouds: reactiveProps.clouds.value,
        qnh: reactiveProps.qnh.value,
        mmHg: reactiveProps.mmHg.value,
        sup: supValue.value,

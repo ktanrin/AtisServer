@@ -23,6 +23,7 @@ export default {
       parsedTemperature: null,
       parsedDewPoint: null,
       parsedWeather: null,
+      parsedClouds: null,
       parsedMetReportTime: null,
       parsedQNHqnh: null,
       parsedmmHg: null,
@@ -74,6 +75,7 @@ export default {
           this.parsedTemperature = this.parseTemperature(response.data);
           this.parsedDewPoint = this.parseDewPoint(response.data);
           this.parsedWeather = this.parseWeather(response.data);
+          this.parsedClouds = this.parseClouds(response.data);
           this.parsedQNH = this.parseQNH(response.data);
           this.parsedmmHg = this.parsemmHg(response.data);
 
@@ -93,6 +95,7 @@ export default {
           temperature: this.parsedTemperature,
           dewPoint: this.parsedDewPoint,
           weather: this.parsedWeather,
+          clouds: this.parsedClouds,
           qnh: this.parsedQNH,
           mmHg: this.parsedmmHg
           });
@@ -108,6 +111,21 @@ export default {
       
 
     },
+
+    parseClouds(data) {
+    // Regular expression to match cloud data between "CLD" and "T" followed by digits
+    const cloudRegex = /CLD (.*?) T\d+/;
+
+    const match = data.match(cloudRegex);
+    if (match && match[1]) {
+      // Found cloud data, return it
+      
+      return { clouds: match[1].trim() };
+    }
+
+    // If no match, return a default or error message
+    return { clouds: 'N/A' };
+  },
 
     parseRVR(data) {
 

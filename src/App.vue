@@ -7,6 +7,7 @@
       :atisInfo="atisInfo"
       :atisRWY="atisRWY"
       :atisTime ="atisTime"
+      :atisWS="atisWS"
       :metReportTime="metReportTime"
       :rcrContent="rcrContent"
       :metReportText="metReportText"
@@ -16,6 +17,7 @@
       :temperature="temperature"
       :dewPoint="dewPoint"
       :weather="weather"
+      :clouds="clouds"
       :qnh="qnh"
       :mmHg="mmHg"
     />
@@ -40,6 +42,7 @@ export default {
       atisInfo: null,
       atisRWY: null,
       atisTime: null,
+      atisWS: null,
       metReportTime: null,
       rcrContent: null,
       metReportText: null,
@@ -48,6 +51,7 @@ export default {
       rvr: null,
       temperature: null,
       weather: null,
+      clouds: null,
       dewPoint: null,
       qnh: null,
       mmHg: null
@@ -60,6 +64,7 @@ export default {
       this.atisInfo = data.atisInfo?.atisInfo || null;
       this.atisRWY = data.atisRWY?.atisRWY || null;
       this.atisTime = data.atisTime?.atisTime || null;
+      this.atisWS = data.atisWS?.atisWS || null;
       this.metReportTime = data.metReportTime?.metReportTime || null;
       this.rcrContent = data.rcrContent?.rcrContent || null;
       this.metReportText = data.metReportText?.metReportText || null;
@@ -69,6 +74,7 @@ export default {
       this.temperature = data.temperature?.temperature || null;
       this.dewPoint = data.dewPoint?.dewPoint || null;
       this.weather = data.weather?.weather || null;
+      this.clouds = data.clouds?.clouds || null;
       this.qnh = data.qnh?.qnh || null;
       this.mmHg = data.mmHg?.mmHg || null;
       // console.log(data.qnh);
@@ -84,6 +90,7 @@ export default {
       // console.log(data.temperature);
       // console.log(data.dewPoint);
       // console.log(data.appType);
+      console.log(data.clouds);
       console.log(data.weather);
       console.log(data.rvr);
     }
