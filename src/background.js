@@ -87,6 +87,8 @@ ipcMain.on('set-folder-path', async (event, manual) => {
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
+const enableDevToolsInProduction = true;
+
 async function createWindow() {
   const win = new BrowserWindow({
     width: 800,
@@ -99,6 +101,8 @@ async function createWindow() {
       
     }
   });
+
+  
   win.loadFile('index.html');
   const menuTemplate = [
     {
@@ -122,13 +126,27 @@ async function createWindow() {
               console.log('Cache cleared!');
             }
           }
+        },
+        {
+          label: 'DevTools',
+          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click(item, focusedWindow) {
+          if (focusedWindow) focusedWindow.toggleDevTools();
         }
+          
+        }
+
       ]
     }
   ];
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
+
+  if (isDevelopment || enableDevToolsInProduction) {
+    win.webContents.openDevTools();
+  }
+  
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);

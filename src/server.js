@@ -6,7 +6,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
     cors: {
-      origin: "http://localhost:8080",
+      //test environment
+      origin: ["http://localhost:8080", "app://."],
+      //production environment
+      //origin: ["http://localhost:3000", "app://."],
       credentials: true
     }
   });
@@ -40,6 +43,10 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('updateData', atisData);
     });
     console.log('Sending ATIS data to client:', atisData);
+
+    app.get('/atisData', (req, res) => {
+        res.send(atisData);
+    });
 
     socket.on('disconnect', () => {
         console.log('Client disconnected');
