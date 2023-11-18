@@ -20,6 +20,7 @@
       :clouds="clouds"
       :qnh="qnh"
       :mmHg="mmHg"
+      :sup="sup"
     />
   </div>
 </template>
@@ -54,7 +55,8 @@ export default {
       clouds: null,
       dewPoint: null,
       qnh: null,
-      mmHg: null
+      mmHg: null,
+      sup: null
     };
   },
   methods: {
@@ -77,6 +79,7 @@ export default {
       this.clouds = data.clouds?.clouds || null;
       this.qnh = data.qnh?.qnh || null;
       this.mmHg = data.mmHg?.mmHg || null;
+      this.sup = data.sup?.sup || null;
       // console.log(data.qnh);
       // console.log(data.mmHg);
       // console.log(data.metReportText);
@@ -93,6 +96,7 @@ export default {
       console.log(data.clouds);
       console.log(data.weather);
       console.log(data.rvr);
+      console.log(data.sup);
     }
   }
 };

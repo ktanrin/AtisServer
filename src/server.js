@@ -4,12 +4,19 @@ const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
+//const allowedOrigins = ['192.168.1.100', '192.168.1.63', "app://."]; 
 const io = socketIo(server, {
     cors: {
-      //test environment
-      origin: ["http://localhost:8080", "app://."],
-      //production environment
-      //origin: ["http://localhost:3000", "app://."],
+    //test environment
+      origin: "*",
+    //production
+    //   origin: (origin, callback) => {
+    //     if (!origin || allowedOrigins.includes(origin)) {
+    //         callback(null, true);
+    //     } else {
+    //         callback(new Error('Not allowed by CORS'));
+    //     }
+    // },
       credentials: true
     }
   });

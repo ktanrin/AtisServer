@@ -27,7 +27,8 @@ export default {
       parsedMetReportTime: null,
       parsedQNHqnh: null,
       parsedmmHg: null,
-      parsedWindShear: null
+      parsedWindShear: null,
+      parsedSupplementary: null
     };
   },
   mounted() {
@@ -78,6 +79,7 @@ export default {
           this.parsedClouds = this.parseClouds(response.data);
           this.parsedQNH = this.parseQNH(response.data);
           this.parsedmmHg = this.parsemmHg(response.data);
+          this.parsedSupplementary = this.parseSupplementary(response.data);
 
           // Emit the parsed data to the parent component
           this.$emit('atis-data-parsed', {
@@ -97,7 +99,8 @@ export default {
           weather: this.parsedWeather,
           clouds: this.parsedClouds,
           qnh: this.parsedQNH,
-          mmHg: this.parsedmmHg
+          mmHg: this.parsedmmHg,
+          sup: this.parsedSupplementary
           });
 
         } else {
@@ -111,6 +114,22 @@ export default {
       
 
     },
+    parseSupplementary(data) {
+     // Regular expression to capture text between the last "HPA" and "TREND"
+      const supplementaryRegex =  /QNH\s+\d+HPA\s+(?:QFE\s+\d+HPA\s+)?([\s\S]*?)\s*TREND/;
+
+      // Search for the pattern in the data
+      const match = data.match(supplementaryRegex);
+
+      if (match && match[1]) {
+        // If a match is found, return the captured supplementary information
+        const sup = match[1].trim();
+        console.log(sup);
+        return { sup };
+      }
+
+      return { error: 'Supplementary data not found' };
+  },
 
     parseClouds(data) {
     // Regular expression to match cloud data between "CLD" and "T" followed by digits
@@ -129,7 +148,7 @@ export default {
 
     parseRVR(data) {
 
-      const rvrRegex = /RWY (\d{2}[RL]?) ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?)(?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?((?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?)?/g;
+      const rvrRegex = /RVR RWY (\d{2}[RL]?) ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?)(?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?((?: ((?:TDZ|MID|END)? ?(?:BLW|ABV)? ?\d{1,4}M?))?)?/g;
 
       let match;
       const rvrValues = [];
@@ -224,7 +243,7 @@ export default {
       const dewPointRegex = /^DP(\d{1,2})$/; // Make sure we're matching the whole word
       const dewPointMatch = word.match(dewPointRegex);
       if (dewPointMatch && dewPointMatch[1]) {
-        return { dewPoint: `${dewPointMatch[1]}C` };
+        return { dewPoint: `${dewPointMatch[1]}` };
       }
     }
 
@@ -240,7 +259,7 @@ export default {
       const temperatureRegex = /^T(\d{1,2})$/;  // Make sure we're matching the whole word
       const tempMatch = word.match(temperatureRegex);
       if (tempMatch && tempMatch[1]) {
-        return { temperature: `${tempMatch[1]}C` };
+        return { temperature: `${tempMatch[1]}` };
       }
     }
     
@@ -249,32 +268,58 @@ export default {
 
 
     parseVisibility(data) {
-    // Split the content into words by spaces
+     // Split the content into words by spaces
     const words = data.split(/\s+/);
 
+    // Check for 'CAVOK' case
+    const cavokIndex = words.indexOf('CAVOK');
+    if (cavokIndex !== -1) {
+      return { visibility: 'CAVOK' };
+    }
+
     // Find the index of "VIS" in the words array
-    const visIndex = words.findIndex((word) => word === 'VIS');
+    const visIndex = words.findIndex(word => word === 'VIS');
 
     if (visIndex !== -1 && visIndex < words.length - 1) {
+      // Handle detailed runway visibility information
+      if (words[visIndex + 1] === 'RWY') {
+        let detailedVisibility = words.slice(visIndex + 1, visIndex + 10).join(' ');
+        return { visibility: detailedVisibility };
+      }
       // Extract the word following "VIS"
       const visibility = words[visIndex + 1];
       return { visibility };
-    }
-    
-    return { error: 'Visibility not found' };
+}
+
+return { error: 'Visibility not found' };
 },
 
     parseWind(data) {
     // Split the content into words by spaces
     const words = data.split(/\s+/);
 
-    // Find the index of "WIND" and "VIS" in the words array
-    const windIndex = words.findIndex((word) => word === 'WIND');
-    const visIndex = words.findIndex((word) => word === 'VIS');
+    // Find the index of "WIND"
+    const windIndex = words.findIndex(word => word === 'WIND');
 
-    if (windIndex !== -1 && visIndex !== -1 && windIndex < visIndex) {
-      // Extract the wind report between "WIND" and "VIS"
-      const windReportWords = words.slice(windIndex + 1, visIndex);
+    // Check for 'CAVOK' or find the index of 'VIS'
+    const cavokIndex = words.indexOf('CAVOK');
+    const visIndex = words.findIndex(word => word === 'VIS');
+
+    // Determine the end index for slicing wind report
+    let endIndex;
+    if (cavokIndex !== -1) {
+      endIndex = cavokIndex;
+    } else if (visIndex !== -1) {
+      endIndex = visIndex;
+    } else {
+      // If neither CAVOK nor VIS is found, return an error
+      return { error: 'Wind report end marker not found' };
+    }
+
+    // If WIND is found and before the end marker
+    if (windIndex !== -1 && windIndex < endIndex) {
+      // Extract the wind report
+      const windReportWords = words.slice(windIndex + 1, endIndex);
       const windInfo = windReportWords.join(' ');
       return { windInfo };
     }

@@ -71,8 +71,8 @@
        
          <!-- INFO -->
          <div class="tile is-parent is-vertical">
-               <article class="tile box atis-info-box">
-                   <h6 class="atis-info">{{ atisInfo }}</h6>
+               <article class="tile box atis-info-box" :class="{ 'flash-orange': flashInfo }">
+                   <h6 class="atis-info" >{{ atisInfo }}</h6>
                </article>
          </div> 
        </div>          
@@ -82,12 +82,12 @@
      <div class="tile is-ancestor">
        
          <div class="tile is-parent is-6">
-             <article class="tile box qnh-box">
+             <article class="tile box qnh-box" :class="{ 'flash-orange': flashQNH }">
                  <h6 class="qnh">{{ qnh }}</h6>
              </article> 
          </div>
          <div class="tile is-parent mmHg-box">
-             <article class="tile box">
+             <article class="tile box" :class="{ 'flash-orange': flashmmHg }">
                  <h6 class="mmHg">{{ mmHg }}</h6>
              </article>
          </div>
@@ -99,7 +99,7 @@
    <div class="container block">
      
        <article class="box">
-         <input type="text"  v-model="supValue" @input="sendData" placeholder="SUP" class="input is-fullwidth"/>
+         <input type="text" v-model="supValue" @input="sendData" placeholder="SUP" class="input is-fullwidth"/>
          <br>
          <input type="text"  v-model="rmkValue" @input="sendData" placeholder="RMK" class="input is-fullwidth"/>
        </article>
@@ -140,14 +140,15 @@ export default {
      weather: String,
      clouds: String,
      qnh: String,
-     mmHg: String   
+     mmHg: String,
+     sup: String   
  },
  setup(props) {
        const socket = io('http://localhost:3000');
 
        const localData = reactive({
          appType: props.appType,
-         prevailWx: 'VMC'
+         prevailWx: 'VMC',
        });
 
        const updateAppType = (event) => {
@@ -160,8 +161,13 @@ export default {
 
        const selectedRunway = ref('21'); 
 
-       const supValue = ref('');
+       const supValue = ref(props.sup);
+       console.log('sup value:', supValue);
        const rmkValue = ref('');
+
+       watch(reactiveProps.sup, (newVal) => {
+        supValue.value = newVal;
+        });
 
        watch(reactiveProps.atisInfo, () => {
        sendData();
@@ -212,7 +218,9 @@ export default {
    },
  data() {
  return {
-   
+   flashInfo: false,
+   flashQNH: false,
+   flashmmHg: false,
    runwayOptions: ['21', '21R', '21L', '03', '03L', '03R'],
    
  };
@@ -237,9 +245,24 @@ export default {
          // Here, for demonstration, I'm logging the change.
          console.log('Met Report changed:', newValue);
        },
-       
-
-       
+       'atisInfo'(newVal, oldVal) {
+      if (newVal !== oldVal) {
+      this.flashInfo = true;
+      setTimeout(() => this.flashInfo = false, 10000); // Reset after 2 seconds
+      }
+        },
+        'qnh'(newVal, oldVal) {
+      if (newVal !== oldVal) {
+      this.flashQNH = true;
+      setTimeout(() => this.flashQNH = false, 10000); // Reset after 2 seconds
+      }
+        },
+        'mmHg'(newVal, oldVal) {
+      if (newVal !== oldVal) {
+      this.flashmmHg = true;
+      setTimeout(() => this.flashmmHg = false, 10000); // Reset after 2 seconds
+      }
+        },
    },
    mounted() {
      console.log('atisTime value:', this.atisTime);
@@ -337,6 +360,15 @@ export default {
     font-size: 500%;
     font-weight: bold;
     display: block;
+  }
+
+  @keyframes flash-orange {
+  0%, 100% { background-color: white; }
+  50% { background-color: orange; }
+  }
+
+  .flash-orange {
+  animation: flash-orange 1s 10; /* Run for 1 second and repeat twice */
   }
   </style>
   

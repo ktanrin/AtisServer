@@ -91,8 +91,8 @@ const enableDevToolsInProduction = true;
 
 async function createWindow() {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1080,
+    height: 800,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
@@ -143,9 +143,9 @@ async function createWindow() {
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
 
-  if (isDevelopment || enableDevToolsInProduction) {
-    win.webContents.openDevTools();
-  }
+  // if (isDevelopment || enableDevToolsInProduction) {
+  //   win.webContents.openDevTools();
+  // }
   
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
