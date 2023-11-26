@@ -3,10 +3,11 @@
 import { app, protocol, BrowserWindow, ipcMain, Menu, dialog } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const fs = require('fs');
 const path = require('path');
-// const debug = require('electron-debug');
+
 //const express = require('express');
 //const http = require('http');
 
@@ -91,8 +92,8 @@ const enableDevToolsInProduction = true;
 
 async function createWindow() {
   const win = new BrowserWindow({
-    width: 1080,
-    height: 800,
+    width: 1220,
+    height: 930,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
@@ -142,10 +143,6 @@ async function createWindow() {
 
   const menu = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menu);
-
-  // if (isDevelopment || enableDevToolsInProduction) {
-  //   win.webContents.openDevTools();
-  // }
   
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -213,4 +210,19 @@ ipcMain.handle('read-file', async (event, filePath) => {
   } catch (error) {
     return { success: false, error: error.message };
   }
+});
+
+ipcMain.handle('load-audio', async (event, fileName) => {
+ // Construct the path to the audio file
+ const filePath = path.join(app.getAppPath(), fileName);
+
+ try {
+   // Read the file as a buffer
+   const audioBuffer = fs.readFileSync(filePath);
+   // Return the buffer data
+   return audioBuffer;
+ } catch (error) {
+   console.error('Error loading audio file:', error);
+   throw error; // Propagate the error back to the renderer process
+ }
 });

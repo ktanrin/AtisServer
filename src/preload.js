@@ -1,4 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
+const path = require('path');
+const fs = require('fs');
+
 
 contextBridge.exposeInMainWorld('electron', {
     send: (channel, data) => {
@@ -12,5 +15,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     invoke: (channel, ...args) => {
         return ipcRenderer.invoke(channel, ...args);
-    }
+    },
+    getAppPath: () => {
+        ipcRenderer.invoke('get-app-path')
+    },
+    loadAudio: (fileName) => ipcRenderer.invoke('load-audio', fileName)
 });

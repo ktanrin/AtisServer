@@ -92,11 +92,12 @@ export default {
       // console.log(data.visibility);
       // console.log(data.temperature);
       // console.log(data.dewPoint);
-      // console.log(data.appType);
-      console.log(data.clouds);
-      console.log(data.weather);
+      console.log(data.appType);
+      //console.log(data.clouds);
+      //console.log(data.weather);
       console.log(data.rvr);
-      console.log(data.sup);
+      //console.log(data.sup);
+      console.log(data.atisWS);
     }
   }
 };
