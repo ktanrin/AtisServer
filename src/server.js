@@ -9,6 +9,8 @@ const io = socketIo(server, {
     cors: {
     //test environment
       origin: "*",
+      credentials: true
+
     //production
     //   origin: (origin, callback) => {
     //     if (!origin || allowedOrigins.includes(origin)) {
@@ -17,7 +19,7 @@ const io = socketIo(server, {
     //         callback(new Error('Not allowed by CORS'));
     //     }
     // },
-      credentials: true
+      
     }
   });
 
@@ -27,10 +29,6 @@ app.use(cors());
 
 let atisData = {};  // Initialize with an empty object or a default value
 
-// app.get("/socket.io/socket.io.js", (req, res) => {
-//     res.sendFile(require.resolve("socket.io/client-dist/socket.io.js"));
-//   });
-
   app.get('/', (req, res) => {
     res.send("Server is running. Socket.io is listening on port 3000");
 });
@@ -39,7 +37,8 @@ io.on('connection', (socket) => {
     console.log('New client connected'); 
     console.log(socket.id);
     // Listen for data from the display component
-    
+   
+    socket.emit('updateData', atisData); // send the data to the client that just connected
     socket.on('sendDataFromDisplay', (data) => {
         console.log('Received data from display component:', data);
 

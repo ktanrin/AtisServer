@@ -173,7 +173,31 @@ export default {
 
        const updateAppType = (event) => {
          localData.appType = event.target.value;
-         sendData();
+         const dataToSend = {
+           error: props.error,
+           appType: localData.appType,
+           prevailWx: localData.prevailWx,
+           prevailVis: localData.prevailVis,
+           atisInfo: props.atisInfo,
+           atisRWY: props.atisRWY,
+           atisTime: props.atisTime,
+           metReportTime: props.metReportTime,
+           atisWS: props.atisWS,
+           rcrContent: props.rcrContent,
+           windInfo: props.windInfo,
+           visibility: props.visibility,
+           rvr: props.rvr,
+           temperature: props.temperature,
+           dewPoint: props.dewPoint,
+           weather: props.weather,
+           clouds: props.clouds,
+           qnh: props.qnh,
+           mmHg: props.mmHg,
+           sup: props.sup,
+           rmk: props.rmk
+         };
+         socket.emit('sendDataFromDisplay', dataToSend);
+         //sendData();
        };
 
        const updatePrevailVis = (event) => {
@@ -205,7 +229,8 @@ export default {
          }
        const dataToSend = {
        error: reactiveProps.error.value,
-       appType: localData.appType,
+       //appType: localData.appType !== null || undefined ? localData.appType : reactiveProps.appType.value,
+       appType: reactiveProps.appType.value || localData.appType,
        prevailWx: localData.prevailWx,
        prevailVis: localData.prevailVis,
        atisInfo: reactiveProps.atisInfo.value,
@@ -367,8 +392,9 @@ export default {
       }
   },
     playAudio(src) {
-      const audio = new Audio(src);
-      audio.play().catch(e => console.error('Error playing sound:', e));
+      //const audio = new Audio(src);
+      console.log('Playing audio:', src);
+      //audio.play().catch(e => console.error('Error playing sound:', e));
   },
   onChangePrevailWx() {
     this.handlePrevailWxChange();
