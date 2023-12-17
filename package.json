@@ -12,6 +12,7 @@
     "postuninstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@electron/remote": "^2.1.0",
     "bulma": "^0.9.4",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",

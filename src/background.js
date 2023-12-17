@@ -15,8 +15,47 @@ const path = require('path');
 //const server = http.createServer(expressApp);
 const server = require('./server.js'); 
 
+const userDataPath = app.getPath('userData');
+console.log('User data path:', userDataPath);
+const settingsFilePath = path.join(userDataPath, 'user-settings.json');
+console.log('Settings file path:', settingsFilePath);
 
 let selectedFilePath;
+
+function saveFolderPath(folderPath) {
+  const settings = { folderPath };
+  fs.writeFileSync(settingsFilePath, JSON.stringify(settings));
+}
+
+function loadSavedFolderPath() {
+  try {
+    const data = fs.readFileSync(settingsFilePath, 'utf8');
+    const settings = JSON.parse(data);
+    return settings.folderPath;
+  } catch (error) {
+    return null;
+  }
+}
+
+function selectLatestTextFile(folderPath) {
+  try {
+    const files = fs.readdirSync(folderPath);
+    const txtFiles = files.filter(file => /\.txt$/.test(file));
+    if (txtFiles.length > 0) {
+        const latestFile = txtFiles.reduce((a, b) => {
+            const aStat = fs.statSync(path.join(folderPath, a));
+            const bStat = fs.statSync(path.join(folderPath, b));
+            return aStat.mtime > bStat.mtime ? a : b;
+        });
+        selectedFilePath = path.join(folderPath, latestFile);
+        console.log('Latest file selected:', selectedFilePath);
+        // Send the selected file path to the renderer process if needed
+        // window.webContents.send('selected-file-path', selectedFilePath);
+    }
+} catch (error) {
+    console.error('Error selecting the latest file:', error);
+}
+}
 
 // 1. Make the setFolderPath function asynchronous
 async function setFolderPath(manual = false) {
@@ -33,6 +72,7 @@ async function setFolderPath(manual = false) {
       window.webContents.send('selected-file-path', selectedFilePath);
     } else {
       const folderPath = result.filePaths[0];
+      saveFolderPath(folderPath); // Save the new path
       const files = fs.readdirSync(folderPath);
 
       const sortedFiles = files
@@ -45,6 +85,7 @@ async function setFolderPath(manual = false) {
       } else {
         console.log('No text files found in the selected directory.');
         selectedFilePath = undefined;
+        
       }
 
        // 5. Watch the folder for changes using fs.watch
@@ -74,17 +115,16 @@ async function setFolderPath(manual = false) {
   } else {
     console.log('No file selected.');
     selectedFilePath = undefined;
-    window.webContents.send('selected-file-path', selectedFilePath);
+     window.webContents.send('selected-file-path', selectedFilePath);
   }
-  console.log('selectedFilePath', selectedFilePath);
-  window.webContents.send('selected-file-path', selectedFilePath);
+  // window.webContents.send('selected-file-path', selectedFilePath);
 }
 
 // 2. Use async/await in your ipcMain handler
-ipcMain.on('set-folder-path', async (event, manual) => {
-  await setFolderPath(manual);
-  event.reply('selected-file-path', selectedFilePath);
-});
+// ipcMain.on('set-folder-path', async (event, manual) => {
+//   await setFolderPath(manual);
+//   event.reply('selected-file-path', selectedFilePath);
+// });
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
 
@@ -155,7 +195,7 @@ async function createWindow() {
 }
 
 app.on('window-all-closed', () => {
-   // Stop the Express.js server
+  //  Stop the Express.js server
   //  server.close(() => {
   //   console.log('Express server stopped');
   // });
@@ -169,10 +209,12 @@ app.on('activate', () => {
 });
 
 app.on('ready', async () => {
-    // Start Express.js server on port 3000
-    // server.listen(3000, '0.0.0.0',() => {
-    //   console.log('Express server started on port 3000');
-    // });
+  const savedFolderPath = loadSavedFolderPath();
+  if (savedFolderPath && fs.existsSync(savedFolderPath)) {
+    selectLatestTextFile(savedFolderPath);
+  } else {
+    setFolderPath(); // Prompt for path if none saved or invalid
+  }
   if (isDevelopment && !process.env.IS_TEST) {
     try {
       await installExtension(VUEJS3_DEVTOOLS);
@@ -197,11 +239,6 @@ if (isDevelopment) {
   }
 }
 
-// ipcMain.on('set-folder-path', (event) => {
-//   // Your logic to get the latest file's path
-//   const filePath = 'D:\\ATIS-INFO\\20230928-000357Z-AtisMsg.txt';  // Example path
-//   event.reply('selected-file-path', filePath);
-// });
 
 ipcMain.handle('read-file', async (event, filePath) => {
   try {
