@@ -40,6 +40,7 @@ export default {
     });
     // Trigger the event to select the latest file
     this.selectLatestFile();
+    
   },
   beforeUnmount() {
     window.electron.removeAllListeners('selected-file-path');

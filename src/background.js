@@ -1,6 +1,6 @@
 'use strict';
 
-import { app, protocol, BrowserWindow, ipcMain, Menu, dialog } from 'electron';
+import { app, protocol, BrowserWindow, ipcMain, Menu, dialog, webContents } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 
@@ -49,8 +49,16 @@ function selectLatestTextFile(folderPath) {
         });
         selectedFilePath = path.join(folderPath, latestFile);
         console.log('Latest file selected:', selectedFilePath);
+        
         // Send the selected file path to the renderer process if needed
-        // window.webContents.send('selected-file-path', selectedFilePath);
+        const window = BrowserWindow.getFocusedWindow();
+        
+        // Then send the message to the renderer process
+    if (window) {
+      window.webContents.send('selected-file-path', selectedFilePath);
+    } else {
+      console.error('No focused window to send the file path');
+    }
     }
 } catch (error) {
     console.error('Error selecting the latest file:', error);
@@ -114,6 +122,7 @@ async function setFolderPath(manual = false) {
     }
   } else {
     console.log('No file selected.');
+    
     selectedFilePath = undefined;
      window.webContents.send('selected-file-path', selectedFilePath);
   }
@@ -210,8 +219,15 @@ app.on('activate', () => {
 
 app.on('ready', async () => {
   const savedFolderPath = loadSavedFolderPath();
+  createWindow();
+  
   if (savedFolderPath && fs.existsSync(savedFolderPath)) {
-    selectLatestTextFile(savedFolderPath);
+    console.log('Saved folder path:', savedFolderPath);
+     BrowserWindow.getAllWindows()[0].webContents.once('did-finish-load', () => {
+      selectLatestTextFile(savedFolderPath);
+    });
+    // window.webContents.send('selected-file-path', saveFolderPath);
+    console.log('savedFolderPath:', savedFolderPath);
   } else {
     setFolderPath(); // Prompt for path if none saved or invalid
   }
@@ -222,7 +238,7 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
-  createWindow();
+  //createWindow();
 });
 
 if (isDevelopment) {

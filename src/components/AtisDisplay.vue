@@ -179,7 +179,7 @@ export default {
            prevailWx: localData.prevailWx,
            prevailVis: localData.prevailVis,
            atisInfo: props.atisInfo,
-           atisRWY: props.atisRWY,
+           atisRWY: selectedRunway.value,
            atisTime: props.atisTime,
            metReportTime: props.metReportTime,
            atisWS: props.atisWS,
@@ -221,7 +221,7 @@ export default {
        watch(reactiveProps.atisInfo, () => {
        sendData();
        });
-
+       
        const sendData = () => {
            if (!reactiveProps) {
              console.error('Props are not defined');
@@ -339,9 +339,17 @@ export default {
        return 'button is-small custom-margin';
    },
    getLeftButtonLabel() {
+      if(this.selectedRunway === 'CLSD') {
+        return '21R';
+      }
+      else
        return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21R' : '03L';
    },
    getRightButtonLabel() {
+      if(this.selectedRunway === 'CLSD') {
+        return '21L';
+      }
+      else
        return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03R';
    },
    async playQNHSound() {

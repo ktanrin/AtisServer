@@ -40,15 +40,15 @@ io.on('connection', (socket) => {
    
     socket.emit('updateData', atisData); // send the data to the client that just connected
     socket.on('sendDataFromDisplay', (data) => {
-        console.log('Received data from display component:', data);
+        //console.log('Received data from display component:', data);
 
         atisData = data;
         
         // If you want to broadcast this data to other clients:
-        console.log('Broadcast ATIS data to client:', atisData);
+        // console.log('Broadcast ATIS data to client:', atisData);
         socket.broadcast.emit('updateData', atisData);
     });
-    console.log('Sending ATIS data to client:', atisData);
+    //console.log('Sending ATIS data to client:', atisData);
 
     app.get('/atisData', (req, res) => {
         res.send(atisData);
