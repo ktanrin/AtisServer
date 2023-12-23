@@ -18,6 +18,5 @@ contextBridge.exposeInMainWorld('electron', {
     },
     getAppPath: () => {
         ipcRenderer.invoke('get-app-path')
-    },
-    loadAudio: (fileName) => ipcRenderer.invoke('load-audio', fileName)
+    }
 });

@@ -141,8 +141,8 @@ const enableDevToolsInProduction = true;
 
 async function createWindow() {
   const win = new BrowserWindow({
-    width: 1220,
-    height: 930,
+    width: 1300,
+    height: 940,
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: true,
@@ -265,17 +265,4 @@ ipcMain.handle('read-file', async (event, filePath) => {
   }
 });
 
-ipcMain.handle('load-audio', async (event, fileName) => {
- // Construct the path to the audio file
- const filePath = path.join(app.getAppPath(), fileName);
 
- try {
-   // Read the file as a buffer
-   const audioBuffer = fs.readFileSync(filePath);
-   // Return the buffer data
-   return audioBuffer;
- } catch (error) {
-   console.error('Error loading audio file:', error);
-   throw error; // Propagate the error back to the renderer process
- }
-});

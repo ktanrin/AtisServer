@@ -11,11 +11,11 @@
                                <h3 class="custom-margin">APP-TYPE</h3><input type="text" @input="updateAppType" placeholder="APP-TYPE" class="input is-small is-info custom-margin" :value="appType"/>
                              </div>
                              <div class="tile is-parent padding-zero" >
-                               <div >
+                               <div class="container max-width" >
                                  <h3 class="custom-margin">ATIS Report At</h3><input type="text" placeholder="Time" class="input is-small custom-margin" :value="atisTime" readonly/>
                                  <h3 class="custom-margin">Vis</h3><input type="text" placeholder="Visibility" class="input is-small custom-margin" :value="visibility" readonly/>
                                </div>
-                               <div>
+                               <div class="container max-width">
                                  <h3 class="custom-margin">MET Report At</h3><input type="text" placeholder="Time" class="input is-small custom-margin" :value="metReportTime" readonly/>
                                  <h3 class="custom-margin">Temp</h3><input type="text" placeholder="Temperature" class="input is-small custom-margin" :value="temperature" readonly/>
                                </div>
@@ -26,7 +26,7 @@
                              <div>
                                <h3 class="custom-margin">RWY-IN-USE</h3>
                                  <div>
-                                   <select :style="{ width: '45px' }" v-model="selectedRunway" @change="sendData" class="select is-small custom-margin">
+                                   <select :style="{ width: '8ch' }" v-model="selectedRunway" @change="sendData" class="select is-small custom-margin">
                                        <option v-for="runway in runwayOptions" :key="runway" :value="runway">
                                            {{ runway }}
                                        </option>
@@ -36,7 +36,7 @@
                                  </div>                                
                              </div>
                              <div class="tile is-parent is-12 padding-zero">
-                               <div>
+                               <div class="container max-width">
                                  <h3 class="custom-margin">Wind</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" :value="windInfo" readonly/>
                                  <h3 class="custom-margin">Dew Point</h3><input type="text" placeholder="Wind" class="input is-small custom-margin" :value="dewPoint" readonly/>
                                </div>                             
@@ -60,10 +60,7 @@
                                  <h3 class="custom-margin">Wx</h3><input type="text" :placeholder="weather === 'N/A' || !weather ? 'Weather' : ''" 
                                                                      class="input is-small custom-margin" :value="weather !== 'N/A' ? weather : ''" readonly/>
                                </div>
-                           </div>
-                           
-                                                           
-                           
+                           </div>                  
                        </article>
            </div>
        
@@ -305,8 +302,6 @@ export default {
         'qnh'(newVal, oldVal) {
       if (newVal !== oldVal) {
       this.flashQNH = true;
-      this.playQNHSound();
-      //this.electron.playAudio('QNH.WAV');
       setTimeout(() => this.flashQNH = false, 10000); // Reset after 2 seconds
       }
         },
@@ -352,70 +347,9 @@ export default {
       else
        return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03R';
    },
-   async playQNHSound() {
-    let audioSrc;
-    if (process.env.NODE_ENV === 'development') {
-        audioSrc = 'QNH.WAV'; // Development path
-        this.playAudio(audioSrc);
-    } else {
-        // Use the exposed function from the preload script
-        const audioData = await window.electron.loadAudio('QNH.WAV');
-        if (audioData) {
-            const audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/wav' });
-            audioSrc = URL.createObjectURL(audioBlob);
-            this.playAudio(audioSrc);
-        }
-    }
-},
-  async playIMCSound() {
-      let audioSrc;
-      if (process.env.NODE_ENV === 'development') {
-          audioSrc = 'IMC.WAV'; // Development path
-          this.playAudio(audioSrc);
-      } else {
-          // Use the exposed function from the preload script
-          const audioData = await window.electron.loadAudio('IMC.wav');
-          if (audioData) {
-              const audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/wav' });
-              audioSrc = URL.createObjectURL(audioBlob);
-              console.log('IMC audioSrc:', audioSrc);
-              this.playAudio(audioSrc);
-          }
-      }
-  },
-  async playVMCSound() {
-      let audioSrc;
-      if (process.env.NODE_ENV === 'development') {
-          audioSrc = 'VMC.WAV'; // Development path
-          this.playAudio(audioSrc);
-      } else {
-          // Use the exposed function from the preload script
-          const audioData = await window.electron.loadAudio('VMC.wav');
-          if (audioData) {
-              const audioBlob = new Blob([new Uint8Array(audioData)], { type: 'audio/wav' });
-              audioSrc = URL.createObjectURL(audioBlob);
-              console.log('VMC audioSrc:', audioSrc);
-              this.playAudio(audioSrc);
-          }
-      }
-  },
-    playAudio(src) {
-      //const audio = new Audio(src);
-      console.log('Playing audio:', src);
-      //audio.play().catch(e => console.error('Error playing sound:', e));
-  },
   onChangePrevailWx() {
-    this.handlePrevailWxChange();
     this.sendData();
   },
-
-  handlePrevailWxChange() {
-    if (this.localData.prevailWx === 'IMC') {
-      this.playIMCSound();
-    } else if (this.localData.prevailWx === 'VMC') {
-      this.playVMCSound();
-    }
-  }
  }
 
 }
@@ -426,6 +360,8 @@ export default {
   <style>
   html,body,header,footer{
   background-color: lightskyblue !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   }
 
   .padding-zero{
