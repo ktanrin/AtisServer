@@ -7,7 +7,7 @@
              <!-- Header -->
                        <article class="tile box custom-header">
                           <div class="tile is-6 is-child">
-                             <div :style="{ visibility: 'hidden' }">
+                             <div>
                                <h3 class="custom-margin">APP-TYPE</h3><input type="text" @input="updateAppType" placeholder="APP-TYPE" class="input is-small is-info custom-margin" :value="appType"/>
                              </div>
                              <div class="tile is-parent padding-zero" >
@@ -266,7 +266,6 @@ export default {
    },
  data() {
  return {
-   isVisible: false,
    flashInfo: false,
    flashQNH: false,
    flashmmHg: false,
@@ -360,7 +359,7 @@ export default {
   
   <style>
   html,body,header,footer{
-  background-color: lemonchiffon !important;
+  background-color: lightskyblue !important;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   }
