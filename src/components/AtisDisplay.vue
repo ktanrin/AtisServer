@@ -268,12 +268,9 @@ export default {
    },
  data() {
  return {
-<<<<<<< HEAD
-=======
-   oldQNH: null,
-   oldmmHg: null,
->>>>>>> AtisServer-Departure
-   flashInfo: false,
+  oldQNH: null,
+  oldmmHg: null,
+  flashInfo: false,
    flashQNH: false,
    flashmmHg: false,
    runwayOptions: ['21', '21R', '21L', '03', '03L', '03R', 'CLSD'],
