@@ -77,12 +77,14 @@
      <div class="tile is-ancestor">   
          <div class="tile is-parent is-6">
              <article class="tile box qnh-box padding-zero" :class="{ 'flash-orange': flashQNH }">
-                 <h6 class="qnh">{{ qnh }}</h6>
+                  <div v-if="flashQNH" class="old-value-box">{{ oldQNH }}</div>
+                  <h6 class="qnh">{{ qnh }}</h6>
              </article> 
          </div>
          <div class="tile is-parent ">
              <article class="tile box mmHg-box padding-zero" :class="{ 'flash-orange': flashmmHg }">
-                 <h6 class="mmHg">{{ mmHg }}</h6>
+                <div v-if="flashmmHg" class="old-value-box">{{ oldmmHg }}</div>
+                <h6 class="mmHg">{{ mmHg }}</h6>
              </article>
          </div>
      </div>
@@ -231,7 +233,7 @@ export default {
        prevailWx: localData.prevailWx,
        prevailVis: localData.prevailVis,
        atisInfo: reactiveProps.atisInfo.value,
-       atisRWY: selectedRunway.value,
+       atisRWY: selectedRunway.value !== null || undefined ? selectedRunway.value : reactiveProps.atisRWY.value,
        atisTime: reactiveProps.atisTime.value,
        metReportTime: reactiveProps.metReportTime.value,
        atisWS: reactiveProps.atisWS.value,
@@ -266,6 +268,11 @@ export default {
    },
  data() {
  return {
+<<<<<<< HEAD
+=======
+   oldQNH: null,
+   oldmmHg: null,
+>>>>>>> AtisServer-Departure
    flashInfo: false,
    flashQNH: false,
    flashmmHg: false,
@@ -301,12 +308,14 @@ export default {
         },
         'qnh'(newVal, oldVal) {
       if (newVal !== oldVal) {
+      this.oldQNH = oldVal;
       this.flashQNH = true;
       setTimeout(() => this.flashQNH = false, 10000); // Reset after 2 seconds
       }
         },
         'mmHg'(newVal, oldVal) {
       if (newVal !== oldVal) {
+      this.oldmmHg = oldVal;
       this.flashmmHg = true;
       setTimeout(() => this.flashmmHg = false, 10000); // Reset after 2 seconds
       }
@@ -320,32 +329,32 @@ export default {
  methods: {
   
    getLeftButtonClass() {
-       if (this.selectedRunway === '21' || this.selectedRunway === '21R') return 'button is-success is-small custom-margin';
-       if (this.selectedRunway === '21L' || this.selectedRunway === '03R') return 'button is-danger is-small custom-margin';
+       if (this.selectedRunway === '21' || this.selectedRunway === '21L') return 'button is-success is-small custom-margin';
+       if (this.selectedRunway === '21R' || this.selectedRunway === '03R') return 'button is-danger is-small custom-margin';
        if (this.selectedRunway === '03' || this.selectedRunway === '03L') return 'button is-success is-small custom-margin';
        if (this.selectedRunway === 'CLSD') return 'button is-danger is-small custom-margin';
        return 'button is-small custom-margin';
    },
    getRightButtonClass() {
-       if (this.selectedRunway === '21' || this.selectedRunway === '21L') return 'button is-success is-small custom-margin';
-       if (this.selectedRunway === '21R' || this.selectedRunway === '03L') return 'button is-danger is-small custom-margin';
+       if (this.selectedRunway === '21' || this.selectedRunway === '21R') return 'button is-success is-small custom-margin';
+       if (this.selectedRunway === '21L' || this.selectedRunway === '03L') return 'button is-danger is-small custom-margin';
        if (this.selectedRunway === '03' || this.selectedRunway === '03R') return 'button is-success is-small custom-margin';
        if (this.selectedRunway === 'CLSD') return 'button is-danger is-small custom-margin';
        return 'button is-small custom-margin';
    },
    getLeftButtonLabel() {
       if(this.selectedRunway === 'CLSD') {
-        return '21R';
-      }
-      else
-       return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21R' : '03L';
-   },
-   getRightButtonLabel() {
-      if(this.selectedRunway === 'CLSD') {
         return '21L';
       }
       else
-       return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03R';
+       return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21L' : '03L';
+   },
+   getRightButtonLabel() {
+      if(this.selectedRunway === 'CLSD') {
+        return '21R';
+      }
+      else
+       return this.selectedRunway && this.selectedRunway.startsWith('21') ? '21R' : '03R';
    },
   onChangePrevailWx() {
     this.sendData();
@@ -358,6 +367,17 @@ export default {
   
   
   <style>
+  .button {
+    border: 1px solid #2c3e50 !important;
+    color:  #2c3e50 !important;
+    width: 8ch !important;
+    font-weight: bold !important;
+  }
+
+  option,select {
+    font-weight: bold !important;
+  }
+
   html,body,header,footer{
   background-color: lightskyblue !important;
   padding-top: 0 !important;
@@ -418,20 +438,38 @@ select{
   /* Target the h6 with class 'atis-info' inside the box with class 'atis-info-box' */
   .atis-info-box .atis-info {
     width: 100%;
-    font-size: 900%;
+    font-size: 9em;
     font-weight: bold;
     display: block;
   }
+
+  .old-value-box {
+    position: absolute !important; /* Position it relative to the parent */
+    top: 0;
+    right: 0;
+    background-color: #fff; /* You can change the background color */
+    padding-left: 1em;
+    padding-right: 1em;
+    font-size: 2em; /* Smaller font size */
+    font-weight: bold;
+    color: darkblue;
+    z-index: 10; /* Ensure it's above other content */
+}
+
+  .mmHg-box, .qnh-box {
+    position:  relative !important;
+  }
+
   .qnh-box .qnh {
     width: 100%;
-    font-size: 500%;
+    font-size: 5.5em;
     font-weight: bold;
     display: block;
   }
 
   .mmHg-box .mmHg {
     width: 100%;
-    font-size: 500%;
+    font-size: 5.5em;
     font-weight: bold;
     display: block;
   }
