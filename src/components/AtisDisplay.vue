@@ -233,7 +233,7 @@ export default {
        prevailWx: localData.prevailWx,
        prevailVis: localData.prevailVis,
        atisInfo: reactiveProps.atisInfo.value,
-       atisRWY: selectedRunway.value,
+       atisRWY: selectedRunway.value !== null || undefined ? selectedRunway.value : reactiveProps.atisRWY.value,
        atisTime: reactiveProps.atisTime.value,
        metReportTime: reactiveProps.metReportTime.value,
        atisWS: reactiveProps.atisWS.value,
@@ -447,8 +447,6 @@ select{
     background-color: #fff; /* You can change the background color */
     padding-left: 1em;
     padding-right: 1em;
-    
-    
     font-size: 2em; /* Smaller font size */
     font-weight: bold;
     color: darkblue;
