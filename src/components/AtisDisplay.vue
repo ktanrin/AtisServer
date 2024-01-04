@@ -268,15 +268,9 @@ export default {
    },
  data() {
  return {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
    oldQNH: null,
    oldmmHg: null,
->>>>>>> AtisServer-Departure
-=======
-   isVisible: false,
->>>>>>> parent of ed853e8 (Revert "departure branch")
    flashInfo: false,
    flashQNH: false,
    flashmmHg: false,
