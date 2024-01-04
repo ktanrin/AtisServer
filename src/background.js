@@ -4,6 +4,7 @@ import { app, protocol, BrowserWindow, ipcMain, Menu, dialog, webContents } from
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
 const fs = require('fs');
 const path = require('path');
@@ -21,6 +22,7 @@ const settingsFilePath = path.join(userDataPath, 'user-settings.json');
 console.log('Settings file path:', settingsFilePath);
 
 let selectedFilePath;
+
 
 function saveFolderPath(folderPath) {
   const settings = { folderPath };
@@ -51,7 +53,7 @@ function selectLatestTextFile(folderPath) {
         console.log('Latest file selected:', selectedFilePath);
         
         // Send the selected file path to the renderer process if needed
-        const window = BrowserWindow.getFocusedWindow();
+        const window = BrowserWindow.getAllWindows()[0];
         
         // Then send the message to the renderer process
     if (window) {
@@ -63,6 +65,17 @@ function selectLatestTextFile(folderPath) {
 } catch (error) {
     console.error('Error selecting the latest file:', error);
 }
+}
+
+function setupFolderWatcher(folderPath) {
+  
+  fs.watch(folderPath, (eventType, filename) => {
+    console.log('setupwacth Event type:', eventType);
+    if (eventType === 'rename' && /\.txt$/.test(filename)) {
+      console.log('File added or removed:', filename);
+      selectLatestTextFile(folderPath);
+    }
+  });
 }
 
 // 1. Make the setFolderPath function asynchronous
@@ -223,10 +236,13 @@ app.on('ready', async () => {
   
   if (savedFolderPath && fs.existsSync(savedFolderPath)) {
     console.log('Saved folder path:', savedFolderPath);
+    setupFolderWatcher(savedFolderPath);
      BrowserWindow.getAllWindows()[0].webContents.once('did-finish-load', () => {
       selectLatestTextFile(savedFolderPath);
     });
-    // window.webContents.send('selected-file-path', saveFolderPath);
+
+  
+     //window.webContents.send('selected-file-path', saveFolderPath);
     console.log('savedFolderPath:', savedFolderPath);
   } else {
     setFolderPath(); // Prompt for path if none saved or invalid
