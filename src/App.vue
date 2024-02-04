@@ -1,43 +1,64 @@
 <template>
-  <div>
-    <AtisReader @atis-data-parsed="updateAtisData" />
-    <AtisDisplay 
-      :error="error"
-      :appType="appType"
-      :atisInfo="atisInfo"
-      :atisRWY="atisRWY"
-      :atisTime ="atisTime"
-      :atisWS="atisWS"
-      :metReportTime="metReportTime"
-      :rcrContent="rcrContent"
-      :metReportText="metReportText"
-      :windInfo="windInfo"
-      :visibility="visibility"
-      :rvr="rvr"
-      :temperature="temperature"
-      :dewPoint="dewPoint"
-      :weather="weather"
-      :clouds="clouds"
-      :qnh="qnh"
-      :mmHg="mmHg"
-      :sup="sup"
+  <div id="app">
+    <div class="tabs is-boxed">
+      <ul>
+        <li :class="{'is-active': selectedTab === 'atisDisplay'}">
+          <a @click.prevent="selectedTab = 'atisDisplay'">ATIS Display</a>
+        </li>
+        <li :class="{'is-active': selectedTab === 'mdiSetting'}">
+          <a @click.prevent="selectedTab = 'mdiSetting'">MDI Setting</a>
+        </li>
+      </ul>
+    </div>
+
+    <div v-show="selectedTab === 'atisDisplay'">
+      <AtisReader @atis-data-parsed="updateAtisData" />
+      <AtisDisplay 
+        :error="error"
+        :appType="appType"
+        :atisInfo="atisInfo"
+        :atisRWY="atisRWY"
+        :atisTime ="atisTime"
+        :atisWS="atisWS"
+        :metReportTime="metReportTime"
+        :rcrContent="rcrContent"
+        :metReportText="metReportText"
+        :windInfo="windInfo"
+        :visibility="visibility"
+        :rvr="rvr"
+        :temperature="temperature"
+        :dewPoint="dewPoint"
+        :weather="weather"
+        :clouds="clouds"
+        :qnh="qnh"
+        :mmHg="mmHg"
+        :sup="sup"
     />
+    </div>
+    <div v-show="selectedTab === 'mdiSetting'">
+      <!-- MDI Setting content goes here -->
+      <MdiSetting />
+      <!-- You can include your MDI settings component here -->
+    </div>
   </div>
 </template>
 
 <script>
 //import HelloWorld from './components/HelloWorld.vue'
-import AtisReader from './components/AtisReader.vue'
+import AtisReader from './components/AtisReader.vue';
 import AtisDisplay from './components/AtisDisplay.vue';
+import MdiSetting from './components/MdiSetting.vue';
 
 export default {
   name: 'App',
   components: {
     AtisReader,
-    AtisDisplay
+    AtisDisplay,
+    MdiSetting
   },
   data() {
     return {
+      selectedTab: 'atisDisplay',
       error: null,
       appType: null,
       atisInfo: null,
@@ -80,24 +101,7 @@ export default {
       this.qnh = data.qnh?.qnh || null;
       this.mmHg = data.mmHg?.mmHg || null;
       this.sup = data.sup?.sup || null;
-      // console.log(data.qnh);
-      // console.log(data.mmHg);
-      // console.log(data.metReportText);
-      // console.log(data.atisInfo);
-      // console.log(data.atisRWY);
-      // console.log(data.rcrContent);
-      // console.log(data.atisTime);
-      // console.log(data.metReportTime)
-      // console.log(data.windInfo);
-      // console.log(data.visibility);
-      // console.log(data.temperature);
-      // console.log(data.dewPoint);
-      console.log(data.appType);
-      //console.log(data.clouds);
-      //console.log(data.weather);
-      console.log(data.rvr);
-      //console.log(data.sup);
-      console.log(data.atisWS);
+    
     }
   }
 };

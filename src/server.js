@@ -28,30 +28,43 @@ const cors = require('cors');
 app.use(cors());
 
 let atisData = {};  // Initialize with an empty object or a default value
+let mdiData = {};  // Initialize with an empty object or a default value
 
   app.get('/', (req, res) => {
     res.send("Server is running. Socket.io is listening on port 3000");
 });
 
 io.on('connection', (socket) => {
-    console.log('New client connected'); 
-    console.log(socket.id);
+    //console.log('New client connected'); 
+    //console.log(socket.id);
     // Listen for data from the display component
    
     socket.emit('updateData', atisData); // send the data to the client that just connected
+    socket.emit('updateMdiData', mdiData); // send the data to the client that just connected
+
     socket.on('sendDataFromDisplay', (data) => {
         //console.log('Received data from display component:', data);
-
         atisData = data;
-        
         // If you want to broadcast this data to other clients:
         // console.log('Broadcast ATIS data to client:', atisData);
         socket.broadcast.emit('updateData', atisData);
     });
     //console.log('Sending ATIS data to client:', atisData);
 
+    socket.on('sendMdiFromSetting', (data) => {
+      console.log('Received data from setting component:', data);
+      mdiData = data;
+      socket.broadcast.emit('updateMdiData', mdiData);
+    });
+
+    //test atisData
     app.get('/atisData', (req, res) => {
         res.send(atisData);
+    });
+
+    //test mdiData
+    app.get('/mdiData', (req, res) => {
+        res.send(mdiData);
     });
 
     socket.on('disconnect', () => {
