@@ -117,6 +117,12 @@
     padding-left: 0.5em;
     text-align: left;
   }
-  
+  .modal-card-foot, .modal-card-head {
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+  }
+  .modal-card{
+    width: 480px !important;
+  }
   </style>
   

@@ -2,7 +2,7 @@
     <div>
       
       <div class="control-form buttons">
-        <button class="button is-primary" @click="addMDI">Add</button>
+        <button class="button is-primary add-btn" @click="addMDI">Add</button>
         <button class="button is-warning" :class="{ 'is-static': selectedMDIIndex === -1 }"
         @click="selectedMDIIndex !== -1 ? editMDI() : null">
         Edit
@@ -190,6 +190,9 @@
   /* Component-specific styles */
  th{
    text-align: center !important;
+}
+.add-btn{
+  margin-left: 8px !important;
 }
   </style>
   
