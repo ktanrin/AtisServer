@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
-
+console.log('preload.js is running');
 contextBridge.exposeInMainWorld('electron', {
     send: (channel, data) => {
         ipcRenderer.send(channel, data);
@@ -18,5 +18,7 @@ contextBridge.exposeInMainWorld('electron', {
     },
     getAppPath: () => {
         ipcRenderer.invoke('get-app-path')
-    }
+    },
+    loadMDIData: () => ipcRenderer.invoke('load-mdi-data'),
+    saveMDIData: (mdiData) => ipcRenderer.invoke('save-mdi-data', mdiData)
 });

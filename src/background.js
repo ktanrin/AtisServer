@@ -21,6 +21,9 @@ console.log('User data path:', userDataPath);
 const settingsFilePath = path.join(userDataPath, 'user-settings.json');
 console.log('Settings file path:', settingsFilePath);
 
+// Path to the JSON file where MDI data will be stored
+const mdiDataPath = path.join(app.getPath('userData'), 'mdiData.json');
+
 let selectedFilePath;
 
 
@@ -281,4 +284,38 @@ ipcMain.handle('read-file', async (event, filePath) => {
   }
 });
 
+// Handler to load MDI data
+ipcMain.handle('load-mdi-data', async (event) => {
+  try {
+    let data = [];
+    if (fs.existsSync(mdiDataPath)) {
+      const fileContent = fs.readFileSync(mdiDataPath, 'utf8');
+      data = JSON.parse(fileContent);
 
+      // If the data is not an array, convert it to an array
+      if (!Array.isArray(data)) {
+        console.warn('MDI data is not an array. Converting to array.');
+        // Convert object to array or wrap the object in an array
+        data = typeof data === 'object' && data !== null ? [data] : [];
+      }
+    }
+    // If the file doesn't exist or the data is not an object, return an empty array
+    console.log('MDI data loaded:', data);
+    return data;
+  } catch (error) {
+    console.error('Failed to load MDI data:', error);
+    // Return an empty array if there's an error
+    return [];
+  }
+});
+
+// Handler to save MDI data
+ipcMain.handle('save-mdi-data', async (event, mdiData) => {
+  try {
+    fs.writeFileSync(mdiDataPath, JSON.stringify(mdiData, null, 2));
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to save MDI data:', error);
+    return { success: false, error: error.message };
+  }
+});
