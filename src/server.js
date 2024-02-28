@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 
+//Common setuo for the server
 const app = express();
 const server = http.createServer(app);
 //const allowedOrigins = ['192.168.1.100', '192.168.1.63', "app://."]; 
@@ -30,29 +31,21 @@ app.use(cors());
 let atisData = {};  // Initialize with an empty object or a default value
 let mdiData = {};  // Initialize with an empty object or a default value
 
-  app.get('/', (req, res) => {
-    res.send("Server is running. Socket.io is listening on port 3000");
+app.get('/', (req, res) => {
+  res.send("Server is running.");
 });
 
 io.on('connection', (socket) => {
-    //console.log('New client connected'); 
-    //console.log(socket.id);
-    // Listen for data from the display component
    
     socket.emit('updateData', atisData); // send the data to the client that just connected
     socket.emit('updateMdiData', mdiData); // send the data to the client that just connected
 
     socket.on('sendDataFromDisplay', (data) => {
-        //console.log('Received data from display component:', data);
         atisData = data;
-        // If you want to broadcast this data to other clients:
-        // console.log('Broadcast ATIS data to client:', atisData);
         socket.broadcast.emit('updateData', atisData);
     });
-    //console.log('Sending ATIS data to client:', atisData);
 
     socket.on('sendMdiFromSetting', (data) => {
-      console.log('Received data from setting component:', data);
       mdiData = data;
       socket.broadcast.emit('updateMdiData', mdiData);
     });
@@ -72,8 +65,6 @@ io.on('connection', (socket) => {
     });
 });
 
-
-
-server.listen(3000, '0.0.0.0',() => {
+server.listen(3000, () => {
     console.log('Server is running on port 3000');
 });

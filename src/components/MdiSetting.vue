@@ -49,7 +49,7 @@
   //import { ipcRenderer } from 'electron';
   import MDIModal from './MDIModal.vue';
  
-  const socket = io('http://localhost:3000');
+  const socket = io('http://localhost:1350');
 
   export default {
     name: 'MdiSettings',
