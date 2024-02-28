@@ -161,7 +161,7 @@ export default {
      sup: String   
  },
  setup(props) {
-       const socket = io('http://localhost:3000');
+       const socket = io('http://localhost:1150');
        
 
        const localData = reactive({
