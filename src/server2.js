@@ -20,11 +20,11 @@ app.get('/', (req, res) => {
 
 atisIo.on('connection', (socket) => {
     console.log('New ATIS client connected');
-    socket.emit('updateAtisData', atisData);
+    socket.emit('updateData', atisData);
 
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
-        atisIo.emit('updateAtisData', atisData);
+        socket.broadcast.emit('updateData', atisData);
     });
 
     //test atisData
@@ -42,15 +42,15 @@ const mdiIo = socketIo(mdiServer, { cors: { origin: "*" } });
 mdiIo.on('connection', (socket) => {
     console.log('New MDI/RCR client connected');
     socket.emit('updateMdiData', mdiData);
-    socket.emit('updateAtisData', atisData);
+    socket.emit('updateData', atisData);
 
     socket.on('sendMdiFromSetting', (data) => {
         mdiData = data;
-        mdiIo.emit('updateMdiData', mdiData);
+        socket.broadcast.emit('updateMdiData', mdiData);
     });
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
-        mdiIo.emit('updateAtisData', atisData);
+        socket.broadcast.emit('updateData', atisData);
     });
       //test mdiData
     app.get('/mdiData', (req, res) => {
