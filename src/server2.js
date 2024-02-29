@@ -24,7 +24,7 @@ atisIo.on('connection', (socket) => {
 
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
-        atisIo.emit('updateData', atisData);
+        socket.broadcast.emit('updateData', atisData);
     });
 
     //test atisData
@@ -46,11 +46,11 @@ mdiIo.on('connection', (socket) => {
 
     socket.on('sendMdiFromSetting', (data) => {
         mdiData = data;
-        mdiIo.emit('updateMdiData', mdiData);
+        socket.broadcast.emit('updateMdiData', mdiData);
     });
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
-        mdiIo.emit('updateData', atisData);
+        socket.broadcast.emit('updateData', atisData);
     });
       //test mdiData
     app.get('/mdiData', (req, res) => {
