@@ -25,6 +25,7 @@ atisIo.on('connection', (socket) => {
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
         socket.broadcast.emit('updateData', atisData);
+        //console.log('broadcasted atisData to atis clients from atis server', atisData);
     });
 
     //test atisData
@@ -43,14 +44,16 @@ mdiIo.on('connection', (socket) => {
     console.log('New MDI/RCR client connected');
     socket.emit('updateMdiData', mdiData);
     socket.emit('updateData', atisData);
-
     socket.on('sendMdiFromSetting', (data) => {
         mdiData = data;
         socket.broadcast.emit('updateMdiData', mdiData);
+        //console.log('broadcasted mdiData to mdi and rcr clients from mdi server', mdiData);
+       
     });
     socket.on('sendDataFromDisplay', (data) => {
         atisData = data;
         socket.broadcast.emit('updateData', atisData);
+        //console.log('broadcasted atisData to mdi and rcr clients from mdi server', atisData);
     });
       //test mdiData
     app.get('/mdiData', (req, res) => {
@@ -66,5 +69,5 @@ const ATIS_ARRIVAL_PORT = 1150;
 const ATIS_DEPARTURE_PORT = 1250;
 const MDI_RCR_PORT = 1350;
 
-atisServer.listen(ATIS_ARRIVAL_PORT, () => console.log(`ATIS server running on port ${ATIS_ARRIVAL_PORT}`));
-mdiServer.listen(MDI_RCR_PORT, () => console.log(`MDI/RCR server running on port ${MDI_RCR_PORT}`));
+atisServer.listen(ATIS_ARRIVAL_PORT, '0.0.0.0', () => console.log(`ATIS server running on port ${ATIS_ARRIVAL_PORT}`));
+mdiServer.listen(MDI_RCR_PORT, '0.0.0.0', () => console.log(`MDI/RCR server running on port ${MDI_RCR_PORT}`));

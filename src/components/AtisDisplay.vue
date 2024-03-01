@@ -162,6 +162,7 @@ export default {
  },
  setup(props) {
        const socket = io('http://localhost:1150');
+       const socket2 = io('http://localhost:1350');
        
 
        const localData = reactive({
@@ -196,6 +197,7 @@ export default {
            rmk: props.rmk
          };
          socket.emit('sendDataFromDisplay', dataToSend);
+         socket2.emit('sendDataFromDisplay', dataToSend);
          //sendData();
        };
 
@@ -254,6 +256,7 @@ export default {
      };
      //console.log('Sending data:', dataToSend);  // Log data for debugging
      socket.emit('sendDataFromDisplay', dataToSend);
+      socket2.emit('sendDataFromDisplay', dataToSend);
    };
      
          return {
