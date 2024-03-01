@@ -97,7 +97,10 @@
     console.error('Failed to load MDI data:', error);
       this.mdilist = []; // Fallback to an empty array if there's an error
   }
-
+    //when start if there is mdi data, send it to server
+    if(this.mdilist.length > 0){
+          socket.emit('sendMdiFromSetting', this.mdilist);
+        }
 
     // Listen for MDI data updates from the server
     socket.on('updateMdiData', (mdiData) => {
