@@ -11,6 +11,13 @@ module.exports = defineConfig({
         win: {
           icon: 'src/assets/icon.png'
         },
+         // NSIS specific configuration
+         nsis: {
+          oneClick: false, // User must click through the installer
+          allowToChangeInstallationDirectory: true, // Allow user to select install location
+          perMachine: true, // Install for all users (requires elevation)
+          // Include other NSIS options as needed
+        },
       }
     },
     
