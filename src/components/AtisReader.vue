@@ -451,7 +451,7 @@ parseWindShear(data) {
 parseQNH(data) {
  
   // Extract QNH from the data
-  const qnhRegex = /QNH (\d+)HPA/;
+  const qnhRegex = /QNH\s+(\d+)\s*HPA/;
     const qnhMatch = data.match(qnhRegex);
     if (qnhMatch && qnhMatch[1]) {
         console.log(qnhMatch[1]);
@@ -463,10 +463,10 @@ parseQNH(data) {
 parsemmHg(data) {
  
   // Extract QNH from the data
-  const qnhRegex = /QNH (\d+)HPA/;
+  const qnhRegex = /QNH\s+(\d+)\s*HPA/;
     const qnhMatch = data.match(qnhRegex);
     if (qnhMatch && qnhMatch[1]) {
-        return { mmHg: String(Math.floor(qnhMatch[1] * 0.0295301 * 100)) }; // calculate and store the mmHg value
+        return { mmHg: String(Math.round(qnhMatch[1] * 0.0295301 * 100)) }; // calculate and store the mmHg value
     }
     return { error: 'N/A' };
 }

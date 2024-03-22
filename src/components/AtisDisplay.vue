@@ -50,8 +50,8 @@
                                          <option value="IMC">IMC</option>
                                      </select>
                                      <input type="text" placeholder="Prevailing Wx " @input="updatePrevailVis" class="input is-small prevail-input is-fullwidth custom-margin"
-                                            :class="{ 'is-warning': localData.prevailWx === 'IMC' }"
-                                            :style="localData.prevailWx === 'IMC' ? {'background-color': 'lightgoldenrodyellow !important'} : {}"
+                                            :class="{ 'is-danger': localData.prevailWx === 'IMC' }"
+                                            :style="localData.prevailWx === 'IMC' ? {'color': 'crimson !important'} : {}"
                                             :value="localData.prevailVis"/>
                                    </div>
                                    <div>
