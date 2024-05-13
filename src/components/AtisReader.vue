@@ -440,13 +440,25 @@ parseMetReport(data) {
 },
 
 parseWindShear(data) {
-    const targetWords = ['WS', 'MBST', 'REP', 'OBS', 'FCST'];
-    const lines = data.split('\n'); 
-    const wsLines = lines.filter(line => {
-      return targetWords.some(word => line.includes(word));
-    });
-    return { atisWS: wsLines.join('\n') };
-  },
+  const wsRegex = [
+    /(\bMOD\b|\bSEV\b)?\s*WS\s+RWY\d{2}[RL]?\s+(OBS|REP|FCST)\s+ATP\s*\d{4}/gi, // Matches simple WS warnings
+    /WS WRNG \d{2} \d{6} VALID (TL \d{6}|\d{6}\/\d{6}) WS (APCH|CLIMB-OUT) RWY\d{2}[RL]? FACST SFC WIND: \d{3}\/\d{2} KT/gi, // Matches detailed WS warnings with SFC wind details
+    /WS WRNG \d{2} \d{6} VALID (TL \d{6}|\d{6}\/\d{6}) (MOD|SEV) WS IN APCH REP AT \d{4} \w{3,4} \d{2} KT ASPEEDL \d+ NM FNA RWY\d{2}/gi, // Another structured format
+    /WS WRNG \d{6} VALID \d{6}\/\d{6} MBST CLIMBOUT RWY\d{2} FCST/gi, // Matches MBST related warnings
+    /WS WRNG \d{2} \d{6} VALID \d{6}\/\d{6} WS APCH RWY \d{2} FACST SFC WIND: \d{3}\/\d{2} KT/gi // Newly added pattern for specific case
+  ];
+
+  const wsLines = [];
+  // Iterate through each regex to find matches
+  wsRegex.forEach(regex => {
+    let match;
+    while ((match = regex.exec(data)) !== null) {
+      wsLines.push(match[0]); // Store the entire matched string
+    }
+  });
+
+  return { atisWS: wsLines.join('\n') };
+},
 
 parseQNH(data) {
  
